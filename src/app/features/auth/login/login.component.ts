@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 import { LoginRequest } from '../../../shared/models/auth-response';
-
-
-import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-login',
@@ -19,15 +18,16 @@ import { MessageService } from 'primeng/api';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CardModule,
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    CardModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -59,10 +59,9 @@ export class LoginComponent {
         this.loading = false;
         this.messageService.add({
           severity: 'success',
-          summary: '¡Éxito!',
-          detail: 'Inicio de sesión correcto'
+          summary: 'Bienvenido',
+          detail: '¡Inicio de sesión correcto!'
         });
-
         this.authService.redirectBasedOnRole(user);
       },
       error: (error) => {
@@ -70,7 +69,7 @@ export class LoginComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Credenciales incorrectas. Por favor, verifica tu email y contraseña.'
+          detail: 'Credenciales incorrectas'
         });
       }
     });
