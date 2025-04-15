@@ -11,6 +11,11 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +28,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ButtonModule,
     ToastModule,
     CardModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    IconFieldModule,
+    InputIconModule,
+    FloatLabelModule,
+    InputGroupModule,
+    InputGroupAddonModule
   ],
   providers: [MessageService],
   templateUrl: './login.component.html',
