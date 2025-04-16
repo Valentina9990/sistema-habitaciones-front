@@ -1,9 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
 @use "primeicons/primeicons.css";
 @layer tailwind, primeng;
 
 @layer tailwind {
   @import "tailwindcss";
+}
+
+$primary-color: #80038d;
+$primary-hover-color: #6a0277;
+$primary-focus-shadow: rgba(128, 3, 141, 0.3);
+
+:root {
+  --primary-color: #{$primary-color};
+  --primary-hover-color: #{$primary-hover-color};
+  --primary-focus-shadow: #{$primary-focus-shadow};
+  --p-checkbox-checked-background: #{$primary-color};
+  --p-checkbox-checked-focus-border-color: #{$primary-color};
+  --p-checkbox-checked-hover-background: #{$primary-hover-color};
+  --p-checkbox-checked-hover-border-color: #{$primary-hover-color};
+  --p-checkbox-checked-border-color: #{$primary-color};
+  --p-button-primary-background: #{$primary-color};
+  --p-button-primary-hover-background: #{$primary-hover-color};
+  --p-button-primary-border-color: #{$primary-color};
+  --p-button-primary-focus-ring-color: #{$primary-focus-shadow};
+  --p-button-outlined-primary-border-color: #{$primary-color};
+  --p-button-outlined-primary-color: #{$primary-color};
+  --p-button-text-primary-color: #{$primary-hover-color};
+  --p-button-outlined-primary-hover-background: rgba(246, 205, 250, 0.776);
+  --p-button-text-primary-active-background: rgba(246, 205, 250, 0.776);
+  --p-button-outlined-primary-active-background: rgba(246, 205, 250, 0.776);
+  --p-button-text-primary-hover-background: rgba(246, 205, 250, 0.776);
 }
 
 html, body {
@@ -18,20 +43,21 @@ app-root {
 }
 
 .p-inputtext:enabled:focus {
-  border-color: #80038d !important;
+  border-color: $primary-color !important;
   box-shadow: none !important;
   outline: none !important;
 }
-.p-button {
-  background-color: #80038d !important;
-  border-color: #80038d !important;
 
-  &:enabled:hover {
-    background-color: #6a0277 !important;
-    border-color: #6a0277 !important;
-  }
+// .p-button {
+//   background-color: $primary-color !important;
+//   border-color: $primary-color !important;
 
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(128, 3, 141, 0.3) !important;
-  }
-}
+//   &:enabled:hover {
+//     background-color: $primary-hover-color !important;
+//     border-color: $primary-hover-color !important;
+//   }
+
+//   &:focus {
+//     box-shadow: 0 0 0 0.2rem $primary-focus-shadow !important;
+//   }
+// }

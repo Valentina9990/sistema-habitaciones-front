@@ -1,0 +1,182 @@
+<div
+  class="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4"
+>
+  <img src="assets/images/logoEasyRoom.PNG" alt="Logo" class="w-48 mb-6" />
+
+  <p-card styleClass="w-full md:w-96 lg:w-96">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <input
+              id="firstName"
+              type="text"
+              pInputText
+              formControlName="firstName"
+              class="w-full"
+            />
+            <label for="firstName">Nombre</label>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              registerForm.get('firstName')?.touched &&
+              registerForm.get('firstName')?.invalid
+            "
+            class="p-error block mt-1"
+          >
+            El nombre es requerido
+          </small>
+        </div>
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <input
+              id="lastName"
+              type="text"
+              pInputText
+              formControlName="lastName"
+              class="w-full"
+            />
+            <label for="lastName">Apellido</label>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              registerForm.get('lastName')?.touched &&
+              registerForm.get('lastName')?.invalid
+            "
+            class="p-error block mt-1"
+          >
+            El apellido es requerido
+          </small>
+        </div>
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-iconfield>
+              <p-inputicon class="pi pi-envelope" />
+              <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                class="w-full"
+              />
+            </p-iconfield>
+            <label for="email">Correo electrónico</label>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              registerForm.get('email')?.touched &&
+              registerForm.get('email')?.invalid
+            "
+            class="p-error block mt-1"
+          >
+            Ingresa un correo válido
+          </small>
+        </div>
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-password
+              id="password"
+              formControlName="password"
+              [feedback]="true"
+              [toggleMask]="true"
+              placeholder="Contraseña"
+              styleClass="w-full"
+              [inputStyle]="{ width: '100%' }"
+            ></p-password>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              registerForm.get('password')?.touched &&
+              registerForm.get('password')?.invalid
+            "
+            class="p-error block mt-1"
+          >
+            La contraseña debe tener al menos 6 caracteres
+          </small>
+        </div>
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-password
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              [feedback]="false"
+              [toggleMask]="true"
+              placeholder="Confirmar contraseña"
+              styleClass="w-full"
+              [inputStyle]="{ width: '100%' }"
+            ></p-password>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              registerForm.get('confirmPassword')?.touched &&
+              registerForm.hasError('mismatch')
+            "
+            class="p-error block mt-1"
+          >
+            Las contraseñas no coinciden
+          </small>
+        </div>
+
+        <!-- Tipo de Usuario -->
+        <div class="field mb-4">
+          <label class="block mb-2 text-sm font-medium text-gray-700"
+            >Tipo de usuario</label
+          >
+          <p-selectButton
+            [options]="userTypes"
+            formControlName="userType"
+            optionLabel="name"
+            optionValue="value"
+          >
+          </p-selectButton>
+        </div>
+
+        <div class="field mb-4 flex items-center">
+          <p-checkbox
+            [binary]="true"
+            size="small"
+            formControlName="acceptTerms"
+            inputId="acceptTerms"
+            class="flex items-center"
+          ></p-checkbox>
+          <label for="acceptTerms" class="ml-2 text-sm">
+            Acepto los términos y condiciones
+          </label>
+        </div>
+        <small
+          *ngIf="
+            registerForm.get('acceptTerms')?.touched &&
+            registerForm.get('acceptTerms')?.invalid
+          "
+          class="p-error block mt-1 mb-4"
+        >
+          Debes aceptar los términos y condiciones
+        </small>
+
+        <div class="field mt-5">
+          <button
+            type="submit"
+            pButton
+            label="Registrarse"
+            class="w-full button"
+            [disabled]="loading"
+          ></button>
+        </div>
+
+        <div class="text-center mt-4">
+          <span class="text-sm text-gray-600">¿Ya tienes una cuenta? </span>
+          <a 
+            routerLink="/login" 
+            class="text-[#80038d] hover:text-[#6a0277] underline hover:underline-offset-2 text-sm font-medium transition-colors"
+        >
+            Inicia sesión
+        </a>
+        </div>
+      </div>
+    </form>
+  </p-card>
+</div>

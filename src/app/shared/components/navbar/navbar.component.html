@@ -1,0 +1,28 @@
+<nav class="bg-white shadow-sm py-3 px-4 md:px-6 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center">
+      <a routerLink="/dashboard" class="flex items-center">
+        <img 
+          src="assets/images/logomorado.png" 
+          alt="EasyRoom Logo" 
+          class="h-8 w-auto"
+        >
+      </a>
+      <h2 class="text-bluegray-100 ml-4 text-xl font-semibold">easyRoom</h2>
+    </div>
+    <div class="flex items-center space-x-4">
+      <ng-container *ngIf="userType === 'owner'">
+        <button 
+          pButton 
+          pRipple
+          icon="pi pi-bell" 
+          class="p-button-rounded p-button-text p-button-plain text-gray-600 hover:text-primary"
+          (click)="showNotifications()"
+        ></button>
+        <span *ngIf="unreadNotifications" class="absolute -mt-6 ml-4 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+          {{ unreadNotifications }}
+        </span>
+      </ng-container>
+      <p-menu #menu [popup]="true" [model]="profileMenuItems"></p-menu>
+      <p-button icon="pi pi-user" styleClass="custom-icon-button" [rounded]="true" [text]="true" [outlined]="true" (onClick)="menu.toggle($event)" />
+    </div>
+  </nav>
