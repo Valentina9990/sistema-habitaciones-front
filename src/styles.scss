@@ -29,6 +29,9 @@ $primary-focus-shadow: rgba(128, 3, 141, 0.3);
   --p-button-text-primary-active-background: rgba(246, 205, 250, 0.776);
   --p-button-outlined-primary-active-background: rgba(246, 205, 250, 0.776);
   --p-button-text-primary-hover-background: rgba(246, 205, 250, 0.776);
+  --p-datepicker-date-selected-background: #{$primary-color};
+  --p-button-primary-active-background: #{$primary-hover-color};
+  --p-button-primary-active-border-color: #{$primary-hover-color};
 }
 
 html, body {
@@ -48,16 +51,3 @@ app-root {
   outline: none !important;
 }
 
-// .p-button {
-//   background-color: $primary-color !important;
-//   border-color: $primary-color !important;
-
-//   &:enabled:hover {
-//     background-color: $primary-hover-color !important;
-//     border-color: $primary-hover-color !important;
-//   }
-
-//   &:focus {
-//     box-shadow: 0 0 0 0.2rem $primary-focus-shadow !important;
-//   }
-// }

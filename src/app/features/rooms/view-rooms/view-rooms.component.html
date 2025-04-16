@@ -1,1 +1,67 @@
 <app-navbar></app-navbar>
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white p-4 rounded-lg shadow-md mb-8">
+    <div class="flex flex-col md:flex-row items-end gap-4">
+      <div class="w-full md:w-1/5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ubicación</label>
+          <p-autocomplete 
+            [(ngModel)]="selectedLocation"
+            [suggestions]="filteredCities"
+            (completeMethod)="filterCities($event)"
+            [dropdown]="true"
+            dropdownMode="blank"
+            field="name"
+            placeholder="Selecciona una ciudad"
+            [showClear]="true"
+            [forceSelection]="true">
+            <ng-template let-city pTemplate="item">
+              <div>{{city.name}}</div>
+            </ng-template>
+          </p-autocomplete>
+        </div>
+      </div>
+
+      <div class="w-full md:w-1/5">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Llegada</label>
+        <p-datepicker [(ngModel)]="checkInDate" dateFormat="dd/mm/yy" [minDate]="minDate" [readonlyInput]="true" />
+      </div>
+
+      <div class="w-full md:w-1/5">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Salida</label>
+        <p-datepicker [(ngModel)]="checkOutDate" dateFormat="dd/mm/yy" [minDate]="minDate" [disabledDates]="disabledDates" [readonlyInput]="true" />
+      </div>
+
+      <div class="w-full md:w-1/5">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nro. Huéspedes</label>
+        <p-inputNumber 
+          [(ngModel)]="selectedCapacity" 
+          [showButtons]="true" 
+          buttonLayout="horizontal" 
+          inputId="guests-input"
+          spinnerMode="horizontal"
+          [min]="1" 
+          [max]="10"
+          [step]="1"
+          [inputStyle]="{ width: '3rem' }"
+        >
+          <ng-template #incrementbuttonicon>
+            <span class="pi pi-plus"></span>
+          </ng-template>
+          <ng-template #decrementbuttonicon>
+            <span class="pi pi-minus"></span>
+          </ng-template>
+        </p-inputNumber>
+      </div>
+
+      <div class="w-full md:w-1/5 md:self-end md:pb-1">
+        <button pButton type="button" label="Buscar Habitaciones" icon="pi pi-search"
+              class="p-button-primary w-full" (click)="searchRooms()"></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showResults">
+    <!--  -->
+  </div>
+</div>
