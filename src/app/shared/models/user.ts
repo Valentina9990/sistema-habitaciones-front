@@ -1,10 +1,10 @@
 export interface User {
-  id?: number;
-  email: string;
-  password?: string;
-  role: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
+  id: number;
+  correo: string;
+  contrasena: string;
+  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
   token?: string;
-  nombre?: string;
-  apellido?: string;
+  nombre: string;
+  apellido: string;
 }
 
