@@ -67,7 +67,7 @@ export class AuthService {
         this.router.navigate(['/propietario/habitaciones']);
         break;
       case 'CLIENTE':
-        this.router.navigate(['/cliente/reservas']);
+        this.router.navigate(['/rooms']);
         break;
       default:
         this.router.navigate(['/']);
