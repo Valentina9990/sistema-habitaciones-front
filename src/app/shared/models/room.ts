@@ -5,7 +5,7 @@ export interface Room {
     ciudad: string;
     direccion: string;
     capacidad: number;
-    priceNoche: number;
+    precioNoche: number;
     descripcion: string;
     calificacion: number;
     serviciosIncluidos: Service[];

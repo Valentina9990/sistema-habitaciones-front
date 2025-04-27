@@ -1,118 +1,136 @@
-// import { Component, OnInit } from '@angular/core';
-// import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-// import { SharedModule } from '../../../shared/shared.module';
-// import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
-// import { DatePickerModule } from 'primeng/datepicker';
-// import { InputNumberModule } from 'primeng/inputnumber';
-// import { Room } from '../../../shared/models/room';
-// import { SliderModule } from 'primeng/slider';
-// import { MockDataService } from '../../../shared/services/mock-data.service';
-// @Component({
-//   selector: 'app-view-rooms',
-//   imports: [NavbarComponent, SharedModule, AutoCompleteModule, DatePickerModule, InputNumberModule, SliderModule],
-//   templateUrl: './view-rooms.component.html',
-//   styleUrl: './view-rooms.component.scss'
-// })
-// export class ViewRoomsComponent implements OnInit {
-//   cities: any[] = [
-//     { name: 'Santa Marta', code: 'santa-marta' },
-//     { name: 'Cartagena', code: 'cartagena' },
-//     { name: 'Medellín', code: 'medellin' },
-//     { name: 'Bogotá', code: 'bogota' },
-//     { name: 'Cali', code: 'cali' }
-//   ];
+import { Component, OnInit } from '@angular/core';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { Room } from '../../../shared/models/room';
+import { SliderModule } from 'primeng/slider';
 
-//   filteredCities: any[] = [];
-//   selectedLocation: any;
-//   checkInDate: Date;
-//   checkOutDate: Date;
-//   selectedCapacity: number;
-//   showResults = false;
+import { finalize } from 'rxjs/operators';
+import { RoomService } from '../services/room.service';
+import { Service } from '../../../shared/models/service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-//   priceRange: [number, number] = [100000, 200000];
-//   services = [
-//     { name: 'Wi-Fi', selected: false },
-//     { name: 'Aire acondicionado', selected: false },
-//     { name: 'TV', selected: false },
-//     { name: 'Baño privado', selected: false },
-//     { name: 'Cama doble', selected: false }
-//   ];
-  
-//   filteredRooms: Room[] = [];
+@Component({
+  selector: 'app-view-rooms',
+  imports: [NavbarComponent, SharedModule, AutoCompleteModule, DatePickerModule, InputNumberModule, SliderModule, ProgressSpinnerModule],
+  templateUrl: './view-rooms.component.html',
+  styleUrl: './view-rooms.component.scss'
+})
+export class ViewRoomsComponent implements OnInit {
+  cities: any[] = [
+    { name: 'Santa Marta', code: 'santa-marta' },
+    { name: 'Cartagena', code: 'cartagena' },
+    { name: 'Medellín', code: 'medellin' },
+    { name: 'Bogotá', code: 'bogota' },
+    { name: 'Cali', code: 'cali' }
+  ];
 
-//   minDate: Date = new Date();
-//   disabledDates: Date[] = [];
+  filteredCities: any[] = [];
+  selectedLocation: any;
+  checkInDate: Date;
+  checkOutDate: Date;
+  selectedCapacity: number;
+  showResults = false;
+  loading = false;
 
-//   constructor(private mockDataService: MockDataService) {
-//     this.checkInDate = new Date();
-//     this.checkOutDate = new Date(this.checkInDate.getTime() + 2 * 24 * 60 * 60 * 1000);
-//     this.selectedCapacity = 1;
-//   }
+  priceRange: [number, number] = [100000, 200000];
+  services: { id: number, name: string, selected: boolean, tipo: 'incluido' | 'adicional' }[] = [];
   
+  filteredRooms: Room[] = [];
+  allServices: Service[] = [];
 
-//   ngOnInit(): void {
-//     const today = new Date();
-//     this.checkInDate = today;
-//     this.checkOutDate = new Date(today.setDate(today.getDate() + 2));
-  
-//     this.loadRoomsAndServices();
-//   }
-  
-//   loadRoomsAndServices() {
-//     this.mockDataService.getServices().subscribe(services => {
-//       this.services = services.map((s: any) => ({ name: s.name, selected: false }));
-  
-//       this.mockDataService.getRooms().subscribe(rooms => {
-//         this.filteredRooms = rooms.map((room: any) => ({
-//           id: room.id,
-//           city: room.city,
-//           address: room.address,
-//           capacity: room.capacity,
-//           price: room.price,
-//           description: room.description,
-//           rating: room.rating,
-//           services: services
-//             .filter((service: any) => room.services.includes(service.id))
-//             .map((service: any) => ({ name: service.name, provided: true })),
-//           images: room.images || []
-//         }));
-//       });
-//     });
-//   }
-  
+  minDate: Date = new Date();
+  disabledDates: Date[] = [];
 
-//   searchRooms() {
-//     this.showResults = true;
-//     this.filterRooms();
-//   }
-  
+  constructor(private roomService: RoomService) {
+    this.checkInDate = new Date();
+    this.checkOutDate = new Date(this.checkInDate.getTime() + 2 * 24 * 60 * 60 * 1000);
+    this.selectedCapacity = 1;
+  }
 
-//   filterCities(event: AutoCompleteCompleteEvent) {
-//     if (event.query === '') {
-//       this.filteredCities = [...this.cities];
-//     } 
-//     else {
-//       this.filteredCities = this.cities.filter(city => 
-//         city.name.toLowerCase().includes(event.query.toLowerCase())
-//       );
-//     }
-//   }
-
-//   filterRooms() {
-//     this.filteredRooms = this.filteredRooms.filter(room => {
-//       const priceMatch = room.price >= this.priceRange[0] && room.price <= this.priceRange[1];
-      
-//       let servicesMatch = true;
-//       const selectedServices = this.services.filter(s => s.selected).map(s => s.name);
-      
-//       if (selectedServices.length > 0) {
-//         servicesMatch = selectedServices.every(serviceName => 
-//           room.services.some(s => s.name === serviceName && s.provided)
-//         );
-//       }
-      
-//       return priceMatch && servicesMatch;
-//     });
-//   }
+  ngOnInit(): void {
+    const today = new Date();
+    this.checkInDate = today;
+    this.checkOutDate = new Date(today.setDate(today.getDate() + 2));
   
-// }
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    this.loading = true;
+    this.roomService.getRoomsWithServices()
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (rooms) => {
+          this.filteredRooms = rooms;
+          this.extractAllServices(rooms);
+        },
+        error: (err) => console.error('Error loading rooms:', err)
+      });
+  }
+
+  extractAllServices(rooms: Room[]) {
+    const allServices = new Map<number, Service>();
+    
+    rooms.forEach(room => {
+      [...room.serviciosIncluidos, ...room.serviciosAdicionales].forEach(service => {
+        if (!allServices.has(service.id)) {
+          allServices.set(service.id, service);
+        }
+      });
+    });
+
+    this.allServices = Array.from(allServices.values());
+    this.services = this.allServices.map(s => ({
+      id: s.id,
+      name: s.nombre,
+      selected: false,
+      tipo: s.tipo
+    }));
+  }
+
+  searchRooms() {
+    this.loading = true;
+    this.showResults = true;
+    
+    const selectedServiceIds = this.services
+      .filter(s => s.selected)
+      .map(s => s.id);
+
+    const filters = {
+      ciudad: this.selectedLocation?.name,
+      precioMin: this.priceRange[0],
+      precioMax: this.priceRange[1],
+      capacidad: this.selectedCapacity,
+      servicios: selectedServiceIds
+    };
+
+    this.roomService.searchRooms(filters)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (rooms) => this.filteredRooms = rooms,
+        error: (err) => console.error('Error searching rooms:', err)
+      });
+  }
+
+  filterCities(event: AutoCompleteCompleteEvent) {
+    this.filteredCities = event.query === '' 
+      ? [...this.cities] 
+      : this.cities.filter(city => 
+          city.name.toLowerCase().includes(event.query.toLowerCase())
+        );
+  }
+
+  getIncludedServices(room: Room): string {
+    return room.serviciosIncluidos?.map(s => s.nombre).join(', ') || 'No hay servicios incluidos';
+  }
+
+  getAdditionalServices(room: Room): string {
+    const services = room.serviciosAdicionales?.map(s => 
+      s.precio ? `${s.nombre} ($${s.precio})` : s.nombre
+    );
+    return services?.join(', ') || 'No hay servicios adicionales';
+  }
+}

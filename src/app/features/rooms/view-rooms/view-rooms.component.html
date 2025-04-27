@@ -1,6 +1,5 @@
 <app-navbar></app-navbar>
 <div class="container mx-auto px-4 py-8">
-  <!-- Search bar section -->
   <div class="bg-white p-4 rounded-lg shadow-md mb-8">
     <div class="flex flex-col md:flex-row items-end gap-4">
       <div class="w-full md:w-1/5">
@@ -25,12 +24,12 @@
 
       <div class="w-full md:w-1/5">
         <label class="block text-sm font-medium text-gray-700 mb-1">Llegada</label>
-        <p-datepicker [(ngModel)]="checkInDate" dateFormat="dd/mm/yy" [minDate]="minDate" [readonlyInput]="true" />
+        <p-datepicker [(ngModel)]="checkInDate" dateFormat="dd/mm/yy" [minDate]="minDate" [readonlyInput]="true"></p-datepicker>
       </div>
 
       <div class="w-full md:w-1/5">
         <label class="block text-sm font-medium text-gray-700 mb-1">Salida</label>
-        <p-datepicker [(ngModel)]="checkOutDate" dateFormat="dd/mm/yy" [minDate]="minDate" [disabledDates]="disabledDates" [readonlyInput]="true" />
+        <p-datepicker [(ngModel)]="checkOutDate" dateFormat="dd/mm/yy" [minDate]="minDate" [disabledDates]="disabledDates" [readonlyInput]="true"></p-datepicker>
       </div>
 
       <div class="w-full md:w-1/5">
@@ -46,10 +45,10 @@
           [step]="1"
           [inputStyle]="{ width: '3rem' }"
         >
-          <ng-template #incrementbuttonicon>
+          <ng-template pTemplate="incrementbuttonicon">
             <span class="pi pi-plus"></span>
           </ng-template>
-          <ng-template #decrementbuttonicon>
+          <ng-template pTemplate="decrementbuttonicon">
             <span class="pi pi-minus"></span>
           </ng-template>
         </p-inputNumber>
@@ -62,14 +61,10 @@
     </div>
   </div>
 
-  <!-- Results section - Side by side filters and room cards -->
   <div *ngIf="showResults" class="flex flex-col md:flex-row gap-8">
-    <!-- Filters panel - Left side -->
     <div class="w-full md:w-1/4">
       <div class="bg-white p-4 rounded-lg shadow-md sticky top-4">
         <h3 class="font-bold text-lg mb-4">Filtrar por:</h3>
-        
-        <!-- Filtro de precio -->
         <div class="mb-6">
           <h4 class="font-medium mb-2">Precio por noche</h4>
           <p-slider 
@@ -78,7 +73,7 @@
             [min]="0" 
             [max]="500000" 
             [step]="10000"
-            (onChange)="filterRooms()">
+            (onChange)="searchRooms()">
           </p-slider>
           <div class="flex justify-between mt-2">
             <span>COP {{ priceRange[0] | number }}</span>
@@ -94,52 +89,69 @@
               <p-checkbox 
                 [(ngModel)]="service.selected" 
                 [binary]="true" 
-                inputId="{{service.name}}" 
-                (onChange)="filterRooms()">
+                [inputId]="'service-' + service.id" 
+                (onChange)="searchRooms()">
               </p-checkbox>
-              <label [for]="service.name" class="ml-2">{{ service.name }}</label>
+              <label [for]="'service-' + service.id" class="ml-2">
+                {{ service.name }}
+                <span class="service-badge {{service.tipo}} ml-2">
+                  {{service.tipo === 'incluido' ? 'Incluido' : 'Adicional'}}
+                </span>
+              </label>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Room cards - Right side -->
+
     <div class="w-full md:w-3/4">
-      <h2 class="text-xl font-bold mb-4">{{ selectedLocation?.name }}: {{ filteredRooms.length }} habitaciones encontradas</h2>
+      <h2 class="text-xl font-bold mb-4">{{ selectedLocation?.name || 'Todas las ubicaciones' }}: {{ filteredRooms.length }} habitaciones encontradas</h2>
       
-      <div class="space-y-6">
-        <!-- Tarjeta de habitación -->
+      <div *ngIf="loading" class="flex justify-center my-8">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+      
+      <div *ngIf="!loading" class="space-y-6">
         <div *ngFor="let room of filteredRooms" class="bg-white rounded-lg shadow-md overflow-hidden">
           <div class="p-6">
             <div class="flex flex-col md:flex-row gap-6">
-              <!-- Imagen (puedes agregarla más tarde) -->
               <div class="w-full md:w-1/3 bg-gray-200 h-48 rounded-lg"></div>
               
-              <!-- Detalles -->
               <div class="w-full md:w-2/3">
-                <h3 class="text-lg font-bold mb-1">Habitación en {{ room.address }}</h3>
-                <p class="text-gray-600 mb-2">{{ room.city }}</p>
+                <h3 class="text-lg font-bold mb-1">Habitación en {{ room.direccion }}</h3>
+                <p class="text-gray-600 mb-2">{{ room.ciudad }}</p>
                 
-                <p class="text-gray-700 mb-4">{{ room.description }}</p>
+                <p class="text-gray-700 mb-4">{{ room.descripcion }}</p>
+
+                <div class="mb-2">
+                  <p class="font-medium">Servicios incluidos:</p>
+                  <p class="text-gray-600">{{ getIncludedServices(room) }}</p>
+                </div>
+
+                <div class="mb-4">
+                  <p class="font-medium">Servicios adicionales:</p>
+                  <p class="text-gray-600">{{ getAdditionalServices(room) }}</p>
+                </div>
                 
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
-                    <p class="font-bold text-lg">COP {{ room.price | number }}</p>
-                    <p class="text-gray-600">1 noche, {{ room.capacity }} persona{{ room.capacity > 1 ? 's' : '' }}</p>
+                    <p class="font-bold text-lg">COP {{ room.precioNoche | number }}</p>
+                    <p class="text-gray-600">1 noche, {{ room.capacidad }} persona{{ room.capacidad > 1 ? 's' : '' }}</p>
                   </div>
                   
                   <div class="flex flex-col items-end">
-                    <p-rating [(ngModel)]="room.rating"></p-rating>
-                    <!-- En view-rooms.component.html -->
-<button pButton type="button" label="Reservar" 
-class="p-button-primary mt-2"
-[routerLink]="['/rooms', room.id]"></button>
+                    <p-rating [ngModel]="room.calificacion"></p-rating>
+                    <button pButton type="button" label="Reservar" class="p-button-primary mt-2" [routerLink]="['/rooms', room.id]">
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="filteredRooms.length === 0" class="text-center py-8">
+          <p class="text-gray-600">No se encontraron habitaciones con los criterios seleccionados.</p>
         </div>
       </div>
     </div>
