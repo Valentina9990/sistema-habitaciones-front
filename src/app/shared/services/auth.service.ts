@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
-import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth-response';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environments';
+import { LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth-response';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +22,8 @@ export class AuthService {
         tap(user => {
           this.userSubject.next(user);
           sessionStorage.setItem('currentUser', JSON.stringify(user));
+
+          this.redirectBasedOnRole(user);
         })
       );
   }
@@ -73,7 +75,7 @@ export class AuthService {
   }
 
   register(registerData: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.API_URL}`, registerData)
+    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, registerData)
       .pipe(
         tap(response => {
           const user: User = {
