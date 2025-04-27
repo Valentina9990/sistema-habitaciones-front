@@ -4,12 +4,13 @@ import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth-response';
+import { environment } from '../../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = environment.api.users;
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
@@ -72,7 +73,7 @@ export class AuthService {
   }
 
   register(registerData: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, registerData)
+    return this.http.post<RegisterResponse>(`${this.API_URL}`, registerData)
       .pipe(
         tap(response => {
           const user: User = {
