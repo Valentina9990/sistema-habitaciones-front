@@ -1,0 +1,52 @@
+[
+    {
+      "id": 1,
+      "name": "Wi-Fi",
+      "icon": "wifi"
+    },
+    {
+      "id": 2,
+      "name": "Aire acondicionado",
+      "icon": "ac_unit"
+    },
+    {
+      "id": 3,
+      "name": "TV",
+      "icon": "tv"
+    },
+    {
+      "id": 4,
+      "name": "Baño privado",
+      "icon": "bathroom"
+    },
+    {
+      "id": 5,
+      "name": "Cama doble",
+      "icon": "bed"
+    },
+    {
+      "id": 6,
+      "name": "Desayuno incluido",
+      "icon": "restaurant"
+    },
+    {
+      "id": 7,
+      "name": "Piscina",
+      "icon": "pool"
+    },
+    {
+      "id": 8,
+      "name": "Estacionamiento gratuito",
+      "icon": "local_parking"
+    },
+    {
+      "id": 9,
+      "name": "Cocina equipada",
+      "icon": "kitchen"
+    },
+    {
+      "id": 10,
+      "name": "Lavadora",
+      "icon": "local_laundry_service"
+    }
+  ]

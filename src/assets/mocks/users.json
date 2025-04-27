@@ -1,0 +1,23 @@
+[
+    {
+      "id": 501,
+      "name": "María González",
+      "email": "maria@example.com",
+      "phone": "+573001234567",
+      "type": "guest"
+    },
+    {
+      "id": 502,
+      "name": "Carlos Rodríguez",
+      "email": "carlos@example.com",
+      "phone": "+573002345678",
+      "type": "guest"
+    },
+    {
+      "id": 101,
+      "name": "Hotel Bavaria",
+      "email": "info@bavaria.com",
+      "phone": "+57542345678",
+      "type": "host"
+    }
+  ]

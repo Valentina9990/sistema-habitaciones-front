@@ -1,0 +1,56 @@
+[
+    {
+      "id": 1,
+      "name": "Habitación en Bavaria",
+      "city": "Santa Marta",
+      "address": "Carrera 5 #12-30",
+      "description": "Acogedora habitación con vista al mar, ideal para parejas. Incluye servicios básicos y comodidades modernas.",
+      "price": 60000,
+      "capacity": 2,
+      "rating": 4.5,
+      "distanceFromCenter": "6km del Centro",
+      "images": [
+        "room1-1.jpg",
+        "room1-2.jpg"
+      ],
+      "services": [1, 3, 4, 5, 8],
+      "ownerId": 101
+    },
+    {
+      "id": 2,
+      "name": "Apartamento en Rodadero",
+      "city": "Santa Marta",
+      "address": "Calle 22 #3-45",
+      "description": "Amplio apartamento con cocina equipada, cerca de las mejores playas de Santa Marta.",
+      "price": 120000,
+      "capacity": 4,
+      "rating": 4.8,
+      "distanceFromCenter": "8km del Centro",
+      "images": [
+        "room2-1.jpg",
+        "room2-2.jpg",
+        "room2-3.jpg"
+      ],
+      "services": [1, 2, 3, 4, 5, 8, 9, 10],
+      "ownerId": 102
+    },
+    {
+      "id": 3,
+      "name": "Suite Ejecutiva",
+      "city": "Cartagena",
+      "address": "Bocagrande, Avenida San Martín #5-75",
+      "description": "Lujosa suite con vista al mar Caribe, decoración moderna y servicios premium.",
+      "price": 250000,
+      "capacity": 2,
+      "rating": 4.9,
+      "distanceFromCenter": "3km del Centro Histórico",
+      "images": [
+        "room3-1.jpg",
+        "room3-2.jpg",
+        "room3-3.jpg",
+        "room3-4.jpg"
+      ],
+      "services": [1, 2, 3, 4, 5, 6, 7, 8],
+      "ownerId": 103
+    }
+  ]

@@ -10,3 +10,19 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
+
+export interface RegisterRequest {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  contrasena: string;
+  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
+}
+
+export interface RegisterResponse {
+  id: number;
+  correo: string;
+  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
+  nombre: string;
+  apellido: string;
+}

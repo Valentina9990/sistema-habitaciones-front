@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, Validators, ValidationErrors } from '@angular/forms';
+import { AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
+
+import { Router } from '@angular/router';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -11,19 +14,24 @@ import { SharedModule } from '../../../shared/shared.module';
 export class RegisterComponent {
   registerForm: FormGroup;
   loading = false;
+  errorMessage: string | null = null;
   userTypes = [
-    { name: 'Propietario', value: 'owner' },
-    { name: 'Arrendatario', value: 'tenant' }
+    { name: 'Propietario', value: 'PROPIETARIO' },
+    { name: 'Cliente', value: 'CLIENTE' }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      userType: ['owner', Validators.required],
+      userType: ['PROPIETARIO', Validators.required],
       acceptTerms: [false, Validators.requiredTrue]
     }, { 
       validators: [this.passwordMatchValidator]
@@ -39,9 +47,28 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && this.registerForm.value.acceptTerms) {
       this.loading = true;
-      // Lógica de registro aquí
+      this.errorMessage = null;
+      
+      const formValue = this.registerForm.value;
+      const registerData = {
+        nombre: formValue.firstName,
+        apellido: formValue.lastName,
+        correo: formValue.email,
+        contrasena: formValue.password,
+        rol: formValue.userType
+      };
+
+      this.authService.register(registerData).subscribe({
+        next: () => {
+          this.loading = false;
+        },
+        error: (error) => {
+          this.loading = false;
+          this.errorMessage = error.error?.message || 'Error en el registro. Por favor, inténtalo de nuevo.';
+        }
+      });
     }
   }
 }

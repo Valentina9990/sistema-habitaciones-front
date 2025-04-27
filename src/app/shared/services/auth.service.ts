@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { LoginRequest } from '../models/auth-response';
+import { LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth-response';
 
 @Injectable({
   providedIn: 'root'
@@ -52,11 +52,11 @@ export class AuthService {
   
   hasRole(role: string): boolean {
     const user = this.getCurrentUser();
-    return user !== null && user.role === role;
+    return user !== null && user.rol === role;
   }
   
   redirectBasedOnRole(user: User): void {
-    switch(user.role) {
+    switch(user.rol) {
       case 'ADMIN':
         this.router.navigate(['/admin/dashboard']);
         break;
@@ -69,5 +69,28 @@ export class AuthService {
       default:
         this.router.navigate(['/']);
     }
+  }
+
+  register(registerData: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, registerData)
+      .pipe(
+        tap(response => {
+          const user: User = {
+            id: response.id,
+            correo: response.correo,
+            contrasena: registerData.contrasena,
+            rol: response.rol,
+            nombre: response.nombre,
+            apellido: response.apellido
+          };
+          this.userSubject.next(user);
+          sessionStorage.setItem('currentUser', JSON.stringify(user));
+          this.redirectBasedOnRole(user);
+        }),
+        catchError(error => {
+          console.error('Error en el registro:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }
