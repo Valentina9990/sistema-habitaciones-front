@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +10,7 @@ import { SharedModule } from '../../../shared/shared.module';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+  constructor(private router: Router) {}
   @Input() userType: 'owner' | 'tenant' = 'tenant';
   @Input() unreadNotifications: number = 3;
 
@@ -30,6 +32,7 @@ export class NavbarComponent {
   }
 
   logout() {
+    this.router.navigate(['/login']); 
     console.log("Cerrando sesión...");
   }
 }
