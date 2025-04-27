@@ -1,42 +1,69 @@
 <app-navbar></app-navbar>
-<div class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
+
+<div *ngIf="loading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+
+
+<div *ngIf="error" class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md text-center">
+  <p class="text-xl text-red-500 mb-4">Error al cargar los detalles de la habitación</p>
+  <button pButton label="Volver" icon="pi pi-arrow-left" routerLink="/rooms"></button>
+</div>
+
+<div *ngIf="room && !loading" class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
   <div class="flex justify-between items-start mb-6">
     <h1 class="text-3xl font-bold">
-      Habitación en {{ room?.address }} - <span class="text-sm"> Verificada</span>
-      <span class="ml-2 text-sm text-yellow-500">★ {{ room?.rating }}</span>
+      Habitación en {{ room.direccion }}
+      <span *ngIf="room.verificada" class="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Verificada</span>
+      <span class="ml-2 text-sm text-yellow-500">★ {{ room.calificacion }}</span>
     </h1>
     <button pButton label="Volver" icon="pi pi-arrow-left" class="p-button-text" routerLink="/rooms"></button>
   </div>
   
-  <!-- Contenido principal: Galería a la izquierda, detalles a la derecha -->
   <div class="grid md:grid-cols-2 gap-8">
-    <!-- Columna izquierda - Galería de imágenes -->
+
     <div>
-      <p-galleria [value]="room?.images" [containerStyle]="{'max-width': '100%'}">
+      <p-galleria [value]="room.imagenes" [containerStyle]="{'max-width': '100%'}" [showIndicators]="true">
         <ng-template pTemplate="item" let-item>
           <img [src]="item" class="w-full rounded-lg" style="max-height: 500px; object-fit: cover;"/>
         </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+          <img [src]="item" class="w-16 h-16 object-cover rounded"/>
+        </ng-template>
       </p-galleria>
-      <div class="text-center mt-2 text-gray-500">1 de {{ room?.images?.length }}</div>
     </div>
     
-    <!-- Columna derecha - Detalles -->
+
     <div>
-      <h2 class="text-xl font-semibold mb-4">Descripción</h2>
-      <p class="text-gray-700 mb-6">{{ room?.description }}</p>
-      
-      <h2 class="text-xl font-semibold mb-4">Servicios</h2>
-      <div class="grid grid-cols-2 gap-4 mb-6">
-        <div *ngFor="let service of room?.services" class="flex items-center">
-          <i [class]="service.icon + ' mr-2 text-blue-500'"></i>
-          <span>{{ service.name }}</span>
-        </div>
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Ubicación</h2>
+        <p class="text-gray-700">{{ room.ciudad }} - {{ room.direccion }}</p>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Descripción</h2>
+        <p class="text-gray-700">{{ room.descripcion }}</p>
       </div>
       
-      <!-- Botón de reserva y precio -->
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Capacidad</h2>
+        <p class="text-gray-700">{{ room.capacidad }} persona{{ room.capacidad > 1 ? 's' : '' }}</p>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Servicios incluidos</h2>
+        <p class="text-gray-700">{{ getIncludedServices() }}</p>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Servicios adicionales</h2>
+        <p class="text-gray-700">{{ getAdditionalServices() }}</p>
+      </div>
+      
+
       <div class="flex flex-col md:flex-row justify-between items-center mt-8 pt-4 border-t border-gray-200">
+        <p class="text-2xl font-bold mb-4 md:mb-0">COP {{ room.precioNoche | number }} <span class="text-sm font-normal">/noche</span></p>
         <button pButton label="Confirmar reserva" class="p-button-lg w-full md:w-auto"></button>
-        <p class="text-2xl font-bold mt-4 md:mt-0">COP {{ room?.price | number }}</p>
       </div>
     </div>
   </div>

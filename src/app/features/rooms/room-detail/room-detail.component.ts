@@ -1,35 +1,61 @@
-// import { Component } from '@angular/core';
-// import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-// import { SharedModule } from '../../../shared/shared.module';
-// import { Room } from '../../../shared/models/room';
-// import { GalleriaModule } from 'primeng/galleria';
-// import { ActivatedRoute } from '@angular/router';
-// import { MockDataService } from '../../../shared/services/mock-data.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Room } from '../../../shared/models/room';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { GalleriaModule } from 'primeng/galleria';
+import { finalize } from 'rxjs/operators';
+import { RoomService } from '../services/room.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-// @Component({
-//   selector: 'app-room-detail',
-//   imports: [NavbarComponent, SharedModule, GalleriaModule],
-//   templateUrl: './room-detail.component.html',
-//   styleUrl: './room-detail.component.scss'
-// })
-// export class RoomDetailComponent {
-//   room?: Room;
+@Component({
+  selector: 'app-room-detail',
+  imports: [NavbarComponent, SharedModule, GalleriaModule, ProgressSpinnerModule],
+  templateUrl: './room-detail.component.html',
+  styleUrl: './room-detail.component.scss'
+})
+export class RoomDetailComponent implements OnInit {
+  room?: Room;
+  loading = false;
+  error = false;
 
-//   constructor(
-//     private route: ActivatedRoute,
-//     private roomService: MockDataService
-//   ) {}
+  constructor(
+    private route: ActivatedRoute,
+    private roomService: RoomService
+  ) {}
 
-//   ngOnInit(): void {
-//     const roomId = this.route.snapshot.paramMap.get('id');
-//     if (roomId) {
-//       this.loadRoomDetails(roomId);
-//     }
-//   }
+  ngOnInit(): void {
+    const roomId = this.route.snapshot.paramMap.get('id');
+    if (roomId) {
+      this.loadRoomDetails(+roomId);
+    }
+  }
 
-//   loadRoomDetails(roomId: string): void {
-//     this.roomService.getRoomById(roomId).subscribe(room => {
-//       this.room = room;
-//     });
-//   }
-// }
+  loadRoomDetails(roomId: number): void {
+    this.loading = true;
+    this.error = false;
+    
+    this.roomService.getRoomById(roomId)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (room) => {
+          this.room = room;
+        },
+        error: (err) => {
+          console.error('Error loading room details:', err);
+          this.error = true;
+        }
+      });
+  }
+
+  getIncludedServices(): string {
+    return this.room?.serviciosIncluidos?.map(s => s.nombre).join(', ') || 'No hay servicios incluidos';
+  }
+
+  getAdditionalServices(): string {
+    const services = this.room?.serviciosAdicionales?.map(s => 
+      s.precio ? `${s.nombre} ($${s.precio})` : s.nombre
+    );
+    return services?.join(', ') || 'No hay servicios adicionales';
+  }
+}
