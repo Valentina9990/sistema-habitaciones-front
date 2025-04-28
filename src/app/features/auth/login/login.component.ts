@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 import { LoginRequest } from '../../../shared/models/auth-response';
 import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, ToastModule],
   providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']

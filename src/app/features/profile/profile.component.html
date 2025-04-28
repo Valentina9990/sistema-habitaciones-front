@@ -1,0 +1,160 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+  <img src="assets/images/logoEasyRoom.PNG" alt="Logo" class="w-48 mb-6" />
+
+  <p-card styleClass="w-full md:w-[600px] lg:w-[600px]" *ngIf="currentUser">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Editar datos</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-iconfield>
+              <p-inputicon class="pi pi-user" />
+              <input
+                id="nombre"
+                type="text"
+                pInputText
+                formControlName="nombre"
+                class="w-full"
+              />
+            </p-iconfield>
+            <label for="nombre">Nombre</label>
+          </p-floatlabel>
+          <small *ngIf="profileForm.get('nombre')?.touched && profileForm.get('nombre')?.invalid" class="p-error block mt-1">
+            El nombre es requerido.
+          </small>
+        </div>
+
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-iconfield>
+              <p-inputicon class="pi pi-user" />
+              <input
+                id="apellido"
+                type="text"
+                pInputText
+                formControlName="apellido"
+                class="w-full"
+              />
+            </p-iconfield>
+            <label for="apellido">Apellido</label>
+          </p-floatlabel>
+          <small *ngIf="profileForm.get('apellido')?.touched && profileForm.get('apellido')?.invalid" class="p-error block mt-1">
+            El apellido es requerido.
+          </small>
+        </div>
+
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-iconfield>
+              <p-inputicon class="pi pi-envelope" />
+              <input
+                id="correo"
+                type="email"
+                pInputText
+                formControlName="correo"
+                class="w-full"
+              />
+            </p-iconfield>
+            <label for="correo">Correo electrónico</label>
+          </p-floatlabel>
+          <small *ngIf="profileForm.get('correo')?.touched && profileForm.get('correo')?.invalid" class="p-error block mt-1">
+            Ingresa un correo válido.
+          </small>
+        </div>
+
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on" class="custom-float-label">
+            <p-autocomplete
+              id="rol"
+              formControlName="rol"
+              [suggestions]="filteredUserTypes"
+              (completeMethod)="filterUserTypes($event)"
+              field="label"
+              [dropdown]="true"
+            ></p-autocomplete>
+            <label for="rol">Tipo de usuario</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="divider my-4 border-t border-gray-200"></div>
+        <h2 class="text-lg font-semibold mb-3 text-gray-700">Cambiar contraseña</h2>
+
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on">
+            <p-password
+              id="contrasena"
+              formControlName="contrasena"
+              [feedback]="true"
+              [toggleMask]="true"
+              styleClass="w-full"
+              [inputStyle]="{'width': '100%'}"
+            ></p-password>
+            <label for="contrasena">Nueva contraseña</label>
+          </p-floatlabel>
+          <small *ngIf="profileForm.get('contrasena')?.touched && profileForm.get('contrasena')?.errors?.['minlength']" class="p-error block mt-1">
+            La contraseña debe tener al menos 8 caracteres.
+          </small>
+        </div>
+
+
+        <div class="field mb-4">
+          <p-floatlabel variant="on">
+            <p-password
+              id="confirmContrasena"
+              formControlName="confirmContrasena"
+              [feedback]="false"
+              [toggleMask]="true"
+              styleClass="w-full"
+              [inputStyle]="{'width': '100%'}"
+            ></p-password>
+            <label for="confirmContrasena">Confirmar contraseña</label>
+          </p-floatlabel>
+          <small *ngIf="profileForm.errors?.['passwordMismatch']" class="p-error block mt-1">
+            Las contraseñas no coinciden.
+          </small>
+        </div>
+
+        <div class="flex flex-row gap-4 mt-4">
+          <div class="field w-full">
+            <button 
+              type="submit" 
+              pButton 
+              label="Guardar cambios"
+              class="w-full" 
+              [disabled]="loading || !isFormSubmittable()"
+            ></button>
+          </div>
+          <div class="field w-full">
+            <button 
+              pButton 
+              label="Volver" 
+              icon="pi pi-arrow-left"
+              class="w-full p-button-secondary" 
+              [routerLink]="['/rooms']"
+            ></button>
+          </div>
+        </div>
+        
+        
+      </div>
+    </form>
+  </p-card>
+  
+
+  <div *ngIf="!currentUser" class="text-center">
+    <p class="text-lg text-gray-700">No se encontró información del usuario.</p>
+    <button 
+      pButton 
+      label="Volver al inicio" 
+      icon="pi pi-home" 
+      class="mt-4"
+      routerLink="/"
+    ></button>
+  </div>
+</div>
+
+<p-toast position="top-right"></p-toast>

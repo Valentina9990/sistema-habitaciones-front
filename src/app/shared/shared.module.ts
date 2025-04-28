@@ -18,7 +18,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   imports: [
     // Módulos de Angular necesarios
@@ -47,7 +48,8 @@ import { MenuModule } from 'primeng/menu';
     MessagesModule,
     ToastModule,
     MenuModule,
-
+    ProgressSpinnerModule,
+    TagModule,
   ],
   declarations: [
     // 

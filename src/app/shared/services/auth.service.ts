@@ -14,7 +14,18 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    const storedUser = typeof window !== 'undefined' ? sessionStorage.getItem('currentUser') : null;
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser) as User;
+        this.userSubject.next(user);
+      } catch (e) {
+        console.error('Error parsing user from sessionStorage:', e);
+        this.userSubject.next(null);
+      }
+    }
+  }
 
   login(loginData: LoginRequest): Observable<User> {
     return this.http.post<User>(`${this.API_URL}/login`, loginData)
@@ -38,19 +49,30 @@ export class AuthService {
     if (this.userSubject.value) {
       return this.userSubject.value;
     }
-    
-    const storedUser = sessionStorage.getItem('currentUser');
-    if (storedUser) {
-      const user = JSON.parse(storedUser) as User;
-      this.userSubject.next(user);
-      return user;
+  
+    // Verificar si estamos en el navegador
+    if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+      const storedUser = sessionStorage.getItem('currentUser');
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser) as User;
+          this.userSubject.next(user);
+          return user;
+        } catch (e) {
+          console.error('Error parsing user from sessionStorage:', e);
+          return null;
+        }
+      }
     }
-    
+  
     return null;
   }
   
+  
   isAuthenticated(): boolean {
-    return this.getCurrentUser() !== null;
+    const user = this.getCurrentUser();
+    // console.log('Usuario actual en isAuthenticated:', user); 
+    return user !== null;
   }
   
   hasRole(role: string): boolean {

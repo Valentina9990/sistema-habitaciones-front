@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
   @Input() userType: 'owner' | 'tenant' = 'tenant';
   @Input() unreadNotifications: number = 3;
 
@@ -18,7 +19,11 @@ export class NavbarComponent {
     {
       label: 'Ver perfil',
       icon: 'pi pi-user',
-      routerLink: '/profile'
+      command: () => {
+        this.router.navigate(['/profile']).catch(e => {
+          console.error('Navigation error:', e);
+        });
+      }
     },
     {
       label: 'Cerrar sesión',
@@ -26,13 +31,14 @@ export class NavbarComponent {
       command: () => this.logout()
     }
   ];
+  
 
   showNotifications() {
     console.log("Mostrar notificaciones...");
   }
 
   logout() {
-    this.router.navigate(['/login']); 
-    console.log("Cerrando sesión...");
+    this.authService.logout();
   }
+  
 }
