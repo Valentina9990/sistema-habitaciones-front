@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { Service } from '../../../shared/models/service';
 import { environment } from '../../../../environments/environments';
 import { Room } from '../../../shared/models/room';
+import { Service } from '../../../shared/models/service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
-  private readonly API_URL = `${environment.api.users}/rooms`;
+  private readonly API_URL = `${environment.api.rooms}`;
 
   constructor(private http: HttpClient) { }
 
@@ -18,15 +18,15 @@ export class RoomService {
   }
 
   getRoomsByCity(city: string): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}?ciudad=${city}`);
+    return this.http.get<Room[]>(`${this.API_URL}/search?ciudad=${city}`);
   }
 
   getRoomsByPriceRange(min: number, max: number): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}?precio_min=${min}&precio_max=${max}`);
+    return this.http.get<Room[]>(`${this.API_URL}/search?precio_min=${min}&precio_max=${max}`);
   }
 
   getRoomsByCapacity(capacity: number): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}?capacidad=${capacity}`);
+    return this.http.get<Room[]>(`${this.API_URL}/search?capacidad=${capacity}`);
   }
 
   getRoomById(id: number): Observable<Room> {
@@ -36,7 +36,7 @@ export class RoomService {
   getRoomsWithServices(): Observable<Room[]> {
     return forkJoin({
       rooms: this.getRooms(),
-      allServices: this.http.get<Service[]>(`${environment.api.users}/services`)
+      allServices: this.http.get<Service[]>(`${environment.api.rooms}`)
     }).pipe(
       map(({ rooms, allServices }) => {
         return rooms.map(room => {
