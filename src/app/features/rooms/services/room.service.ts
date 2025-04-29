@@ -10,28 +10,29 @@ import { Review } from '../../../shared/models/review';
   providedIn: 'root'
 })
 export class RoomService {
-  private readonly API_URL = `${environment.api.rooms}`;
+  private readonly API_URL_ROOMS = `${environment.api.rooms}`;
+  private readonly API_URL_Reviews = `${environment.api.reviews}`;
 
   constructor(private http: HttpClient) { }
 
   getRooms(): Observable<Room[]> {
-    return this.http.get<Room[]>(this.API_URL);
+    return this.http.get<Room[]>(this.API_URL_ROOMS);
   }
 
   getRoomsByCity(city: string): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}/search?ciudad=${city}`);
+    return this.http.get<Room[]>(`${this.API_URL_ROOMS}/search?ciudad=${city}`);
   }
 
   getRoomsByPriceRange(min: number, max: number): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}/search?precio_min=${min}&precio_max=${max}`);
+    return this.http.get<Room[]>(`${this.API_URL_ROOMS}/search?precio_min=${min}&precio_max=${max}`);
   }
 
   getRoomsByCapacity(capacity: number): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL}/search?capacidad=${capacity}`);
+    return this.http.get<Room[]>(`${this.API_URL_ROOMS}/search?capacidad=${capacity}`);
   }
 
   getRoomById(id: number): Observable<Room> {
-    return this.http.get<Room>(`${this.API_URL}/${id}`);
+    return this.http.get<Room>(`${this.API_URL_ROOMS}/${id}`);
   }
 
   getRoomsWithServices(): Observable<Room[]> {
@@ -66,7 +67,7 @@ export class RoomService {
     capacidad?: number;
     servicios?: number[];
   }): Observable<Room[]> {
-    let url = `${this.API_URL}/search?`;
+    let url = `${this.API_URL_ROOMS}/search?`;
     const params = [];
     
     if (filters.ciudad) params.push(`ciudad=${filters.ciudad}`);
@@ -79,18 +80,18 @@ export class RoomService {
   }
 
   getServices(): Observable<Service[]> {
-    return this.http.get<Service[]>(this.API_URL);
+    return this.http.get<Service[]>(this.API_URL_ROOMS);
   }
 
   getServicesByType(tipo: 'incluido' | 'adicional'): Observable<Service[]> {
-    return this.http.get<Service[]>(`${this.API_URL}?tipo=${tipo}`);
+    return this.http.get<Service[]>(`${this.API_URL_ROOMS}?tipo=${tipo}`);
   }
 
   getServiceById(id: number): Observable<Service> {
-    return this.http.get<Service>(`${this.API_URL}/${id}`);
+    return this.http.get<Service>(`${this.API_URL_ROOMS}/${id}`);
   }
 
   getRoomReviews(roomId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.API_URL}/${roomId}/reviews`);
+    return this.http.get<Review[]>(`${this.API_URL_Reviews}?roomId=${roomId}`);
   }
 }

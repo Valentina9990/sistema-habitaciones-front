@@ -10,6 +10,7 @@ $primary-hover-color: #6a0277;
 $primary-focus-shadow: rgba(128, 3, 141, 0.3);
 
 :root {
+  
   --primary-color: #{$primary-color};
   --primary-hover-color: #{$primary-hover-color};
   --primary-focus-shadow: #{$primary-focus-shadow};
@@ -35,6 +36,7 @@ $primary-focus-shadow: rgba(128, 3, 141, 0.3);
   --p-slider-range-background: #{$primary-color};
   --p-button-primary-hover-border-color: #{$primary-focus-shadow};
   --p-galleria-indicator-button-active-background: #{$primary-color};
+  --p-rating-icon-active-color: #{$primary-color};
 }
 
 html, body {
