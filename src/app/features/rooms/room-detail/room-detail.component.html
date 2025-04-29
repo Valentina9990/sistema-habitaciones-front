@@ -1,16 +1,17 @@
 <app-navbar></app-navbar>
 
-<div *ngIf="loading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+<div *ngIf="loading" class="flex justify-center items-center min-h-[400px]">
   <p-progressSpinner></p-progressSpinner>
 </div>
 
-
-<div *ngIf="error" class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md text-center">
-  <p class="text-xl text-red-500 mb-4">Error al cargar los detalles de la habitación</p>
-  <button pButton label="Volver" icon="pi pi-arrow-left" routerLink="/rooms"></button>
+<div *ngIf="error" class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
+  <p class="text-red-600 text-center">Error al cargar los detalles de la habitación. Por favor intente nuevamente.</p>
+  <div class="flex justify-center mt-4">
+    <button pButton label="Volver" icon="pi pi-arrow-left" routerLink="/rooms"></button>
+  </div>
 </div>
 
-<div *ngIf="room && !loading" class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
+<div *ngIf="room && !loading" class="max-w-6xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
   <div class="flex justify-between items-start mb-6">
     <h1 class="text-3xl font-bold">
       Habitación en {{ room.direccion }}
@@ -20,51 +21,58 @@
     <button pButton label="Volver" icon="pi pi-arrow-left" class="p-button-text" routerLink="/rooms"></button>
   </div>
   
-  <div class="grid md:grid-cols-2 gap-8">
-
-    <div>
-      <p-galleria [value]="room.imagenes" [containerStyle]="{'max-width': '100%'}" [showIndicators]="true">
-        <ng-template pTemplate="item" let-item>
-          <img [src]="item" class="w-full rounded-lg" style="max-height: 500px; object-fit: cover;"/>
-        </ng-template>
-        <ng-template pTemplate="thumbnail" let-item>
-          <img [src]="item" class="w-16 h-16 object-cover rounded"/>
-        </ng-template>
-      </p-galleria>
-    </div>
-    
-
-    <div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
       <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Ubicación</h2>
-        <p class="text-gray-700">{{ room.ciudad }} - {{ room.direccion }}</p>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Descripción</h2>
-        <p class="text-gray-700">{{ room.descripcion }}</p>
+        <p-galleria [value]="room.imagenes" [containerStyle]="{'max-width': '100%'}" [showIndicators]="true">
+          <ng-template pTemplate="item" let-item>
+            <img [src]="item" class="w-full rounded-lg" style="max-height: 500px; object-fit: cover;"/>
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+            <img [src]="item" class="w-16 h-16 object-cover rounded"/>
+          </ng-template>
+        </p-galleria>
       </div>
       
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Capacidad</h2>
-        <p class="text-gray-700">{{ room.capacidad }} persona{{ room.capacidad > 1 ? 's' : '' }}</p>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Servicios incluidos</h2>
-        <p class="text-gray-700">{{ getIncludedServices() }}</p>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Servicios adicionales</h2>
-        <p class="text-gray-700">{{ getAdditionalServices() }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Ubicación</h2>
+            <p class="text-gray-700">{{ room.ciudad }} - {{ room.direccion }}</p>
+          </div>
+          
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Descripción</h2>
+            <p class="text-gray-700">{{ room.descripcion }}</p>
+          </div>
+        </div>
+        
+        <div>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Capacidad</h2>
+            <p class="text-gray-700">{{ room.capacidad }} persona{{ room.capacidad > 1 ? 's' : '' }}</p>
+          </div>
+          
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Servicios incluidos</h2>
+            <p class="text-gray-700">{{ getIncludedServices() }}</p>
+          </div>
+          
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Servicios adicionales</h2>
+            <p class="text-gray-700">{{ getAdditionalServices() }}</p>
+          </div>
+        </div>
       </div>
       
-
       <div class="flex flex-col md:flex-row justify-between items-center mt-8 pt-4 border-t border-gray-200">
         <p class="text-2xl font-bold mb-4 md:mb-0">COP {{ room.precioNoche | number }} <span class="text-sm font-normal">/noche</span></p>
         <button pButton label="Confirmar reserva" class="p-button-lg w-full md:w-auto"></button>
       </div>
+    </div>
+    
+    <div class="lg:col-span-1">
+      <app-room-reviews [roomId]="roomId"></app-room-reviews>
     </div>
   </div>
 </div>

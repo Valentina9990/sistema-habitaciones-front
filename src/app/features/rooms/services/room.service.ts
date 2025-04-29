@@ -4,6 +4,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environments';
 import { Room } from '../../../shared/models/room';
 import { Service } from '../../../shared/models/service';
+import { Review } from '../../../shared/models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -87,5 +88,9 @@ export class RoomService {
 
   getServiceById(id: number): Observable<Service> {
     return this.http.get<Service>(`${this.API_URL}/${id}`);
+  }
+
+  getRoomReviews(roomId: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.API_URL}/${roomId}/reviews`);
   }
 }
