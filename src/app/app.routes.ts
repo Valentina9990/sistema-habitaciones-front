@@ -5,12 +5,14 @@ import { ViewRoomsComponent } from './features/rooms/view-rooms/view-rooms.compo
 import { ProfileComponent } from './features/profile/profile.component';
 import { authGuard } from './shared/guards/auth.guard';
 import { RoomDetailComponent } from './features/rooms/room-detail/room-detail.component';
+import { ADMIN_ROUTES } from './features/admin/admin.routes';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   { path: 'rooms', component: ViewRoomsComponent },
+  { path: 'admin', children: ADMIN_ROUTES },
   { path: 'rooms/:id', component: RoomDetailComponent },
   { path: '', redirectTo: '/rooms', pathMatch: 'full' },
   { path: '**', redirectTo: '/rooms' }

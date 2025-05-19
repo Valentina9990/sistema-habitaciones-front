@@ -5,6 +5,7 @@ export interface User {
   rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
   token?: string;
   nombre: string;
+  estado: string;
   apellido: string;
 }
 

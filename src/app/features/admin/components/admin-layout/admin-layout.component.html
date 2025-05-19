@@ -1,0 +1,22 @@
+<div class="admin-layout-container">
+  <div class="flex h-screen bg-gray-100">
+    
+    <div [ngClass]="{'w-64': sidebarVisible, 'w-16': !sidebarVisible}" 
+         class="transition-all duration-300 h-full bg-gray-800">
+      <app-sidebar [collapsed]="!sidebarVisible"></app-sidebar>
+    </div>
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="bg-white shadow-sm h-16 flex items-center px-6">
+        <button pButton 
+                icon="pi pi-bars" 
+                class="p-button-text p-button-rounded"
+                (click)="toggleSidebar()">
+        </button>
+      </header>
+      <main class="flex-1 overflow-auto p-6">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+</div>
