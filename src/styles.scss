@@ -39,7 +39,10 @@ $primary-focus-shadow: rgba(128, 3, 141, 0.3);
   --p-rating-icon-active-color: #{$primary-color};
   --p-paginator-nav-button-selected-color: #{$primary-color};
   --p-paginator-nav-button-selected-background: rgba(246, 205, 250, 0.776);
-
+  --p-select-option-selected-focus-background: rgba(246, 205, 250, 0.776);
+  --p-select-option-selected-focus-color:  #{$primary-color};
+  --p-select-option-selected-background: rgba(246, 205, 250, 0.776);
+  --p-form-field-focus-border-color: #{$primary-color};
 }
 
 html, body {

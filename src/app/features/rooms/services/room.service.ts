@@ -91,6 +91,10 @@ export class RoomService {
     return this.http.get<Service>(`${this.API_URL_ROOMS}/${id}`);
   }
 
+  updateRoom(id: number, room: Partial<Room>): Observable<Room> {
+    return this.http.put<Room>(`${this.API_URL_ROOMS}/${id}`, room);
+  }
+  
   getRoomReviews(roomId: number): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.API_URL_Reviews}?roomId=${roomId}`);
   }

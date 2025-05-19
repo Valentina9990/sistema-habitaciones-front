@@ -1,1 +1,182 @@
-<p>rooms works!</p>
+<div class="p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl pb-3 font-bold text-gray-800">Gestión de Habitaciones</h1>
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <p-table
+    [value]="displayedRooms"
+    dataKey="id"
+    editMode="row"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [paginator]="true"
+    [rows]="rows"
+    [first]="first"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} habitaciones"
+    (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[5, 10, 25]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5%">ID</th>
+        <th style="width: 15%">Ciudad</th>
+        <th style="width: 15%">Dirección</th>
+        <th style="width: 10%">Capacidad</th>
+        <th style="width: 10%">Precio/Noche</th>
+        <th style="width: 10%">Verificada</th>
+        <th style="width: 15%">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template
+      pTemplate="body"
+      let-room
+      let-editing="editing"
+      let-ri="rowIndex"
+    >
+      <tr [pEditableRow]="room">
+        <td>
+          {{ room.id }}
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="room.ciudad"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ room.ciudad }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="room.direccion"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ room.direccion }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="number"
+                [(ngModel)]="room.capacidad"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ room.capacidad }} personas
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="number"
+                [(ngModel)]="room.precioNoche"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              ${{ room.precioNoche }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <select
+                [(ngModel)]="room.verificada"
+                class="p-2 border rounded w-full"
+              >
+                <option [ngValue]="true">Verificada</option>
+                <option [ngValue]="false">No Verificada</option>
+              </select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              <p-tag
+                [value]="room.verificada ? 'Verificada' : 'No Verificada'"
+                [severity]="getRoomVerificationSeverity(room.verificada)"
+              ></p-tag>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <div class="flex items-center justify-start gap-2">
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(room)"
+              class="p-button-rounded p-button-text p-button-secondary"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(room)"
+              class="p-button-rounded p-button-text p-button-success"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel(room, ri)"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+            <button
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-eye"
+              routerLink="/rooms/{{ room.id }}"
+              class="p-button-rounded p-button-text p-button-info"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center p-4">No se encontraron habitaciones.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

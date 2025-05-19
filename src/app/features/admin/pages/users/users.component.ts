@@ -53,7 +53,7 @@ export class UsersComponent implements OnInit {
       next: (users) => {
         this.allUsers = users;
         this.totalRecords = users.length;
-        this.updateDisplayedUsers();
+        this.displayedUsers = users;
         this.loading = false;
       },
       error: (err) => {
@@ -65,10 +65,6 @@ export class UsersComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
-
-  updateDisplayedUsers() {
-    this.displayedUsers = this.allUsers.slice(this.first, this.first + this.rows);
   }
 
   onRowEditInit(user: User) {
@@ -113,30 +109,6 @@ export class UsersComponent implements OnInit {
   pageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
-    this.updateDisplayedUsers();
-  }
-
-  reset() {
-    this.first = 0;
-    this.updateDisplayedUsers();
-  }
-  
-  isFirstPage(): boolean {
-    return this.first === 0;
-  }
-
-  isLastPage(): boolean {
-    return this.first >= (this.totalRecords - this.rows);
-  }
-
-  next() {
-    this.first = this.first + this.rows;
-    this.updateDisplayedUsers();
-  }
-
-  prev() {
-    this.first = this.first - this.rows;
-    this.updateDisplayedUsers();
   }
 
   getUserStatusSeverity(status: string): "info" | "danger" | undefined {
