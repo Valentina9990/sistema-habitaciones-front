@@ -26,6 +26,15 @@ export class UserService {
     );
   }
 
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}/all`).pipe(
+      catchError(error => {
+        console.error('Error al obtener usuarios:', error);
+        return throwError(() => new Error('No se pudieron obtener los usuarios'));
+      })
+    );
+  }
+
   updateUser(userId: number, userData: User): Observable<User> {
     return this.http.put<User>(`${this.API_URL}/${userId}`, userData);
   }

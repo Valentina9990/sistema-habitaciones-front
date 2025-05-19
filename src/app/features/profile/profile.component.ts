@@ -135,11 +135,11 @@ export class ProfileComponent implements OnInit {
           apellido: this.profileForm.value.apellido,
           correo: this.profileForm.value.correo,
           rol: rolValue,
-          contrasena:
-            this.profileForm.value.contrasena &&
+          contrasena: this.profileForm.value.contrasena &&
             this.profileForm.value.contrasena.trim() !== ''
-              ? this.profileForm.value.contrasena
-              : currentUserData.contrasena,
+            ? this.profileForm.value.contrasena
+            : currentUserData.contrasena,
+          estado: ''
         };
 
         this.loading = true;

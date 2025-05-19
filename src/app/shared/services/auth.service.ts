@@ -50,7 +50,6 @@ export class AuthService {
       return this.userSubject.value;
     }
   
-    // Verificar si estamos en el navegador
     if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
       const storedUser = sessionStorage.getItem('currentUser');
       if (storedUser) {
@@ -106,7 +105,8 @@ export class AuthService {
             contrasena: registerData.contrasena,
             rol: response.rol,
             nombre: response.nombre,
-            apellido: response.apellido
+            apellido: response.apellido,
+            estado: 'activo',
           };
           this.userSubject.next(user);
           sessionStorage.setItem('currentUser', JSON.stringify(user));

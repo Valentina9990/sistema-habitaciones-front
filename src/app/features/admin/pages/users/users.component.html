@@ -1,0 +1,162 @@
+<div class="p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl pb-3 font-bold text-gray-800">Gestión de Usuarios</h1>
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <p-table
+    [value]="displayedUsers"
+    dataKey="id"
+    editMode="row"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [paginator]="true"
+    [rows]="rows"
+    [first]="first"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+    (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[5, 10, 25]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%">ID</th>
+        <th style="width: 20%">Nombre</th>
+        <th style="width: 20%">Email</th>
+        <th style="width: 15%">Estado</th>
+        <th style="width: 15%">Rol</th>
+        <th style="width: 15%">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template
+      pTemplate="body"
+      let-user
+      let-editing="editing"
+      let-ri="rowIndex"
+    >
+      <tr [pEditableRow]="user">
+        <td>
+          {{ user.id }}
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="user.nombre"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ user.nombre }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="email"
+                [(ngModel)]="user.correo"
+                required
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ user.correo }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <select
+                [(ngModel)]="user.estado"
+                class="p-2 border rounded w-full"
+              >
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+              </select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              <p-tag
+                [value]="user.estado === 'activo' ? 'Activo' : 'Inactivo'"
+                [severity]="getUserStatusSeverity(user.estado)"
+              ></p-tag>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <select [(ngModel)]="user.rol" class="p-2 border rounded w-full">
+                <option value="ADMIN">Administrador</option>
+                <option value="PROPIETARIO">Propietario</option>
+                <option value="CLIENTE">Cliente</option>
+              </select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{
+                user.rol === "ADMIN"
+                  ? "Administrador"
+                  : user.rol === "PROPIETARIO"
+                  ? "Propietario"
+                  : "Cliente"
+              }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <div class="flex items-center justify-center gap-2">
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(user)"
+              class="p-button-rounded p-button-text p-button-secondary"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(user)"
+              class="p-button-rounded p-button-text p-button-success"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel(user, ri)"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-4">No se encontraron usuarios.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
