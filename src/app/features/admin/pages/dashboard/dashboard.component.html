@@ -1,1 +1,107 @@
-<p>dashboard works!</p>
+<div class="dashboard-container p-4" *ngIf="!loading; else loadingTemplate">
+  <div class="stats-section mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="w-full">
+        <p-card class="stat-card h-full">
+          <div class="card-content flex flex-col items-center text-center">
+            <i class="pi pi-home card-icon text-4xl text-blue-500 mb-2"></i>
+            <h3 class="card-title text-lg font-medium">Total Habitaciones</h3>
+            <div class="card-value text-3xl font-bold my-2">{{ totalRooms }}</div>
+            <div class="card-detail text-sm text-gray-600">
+              <span class="verified font-medium text-green-600">{{ verifiedRooms }} verificadas</span>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <div class="w-full">
+        <p-card class="stat-card h-full">
+          <div class="card-content flex flex-col items-center text-center">
+            <i class="pi pi-users card-icon text-4xl text-purple-500 mb-2"></i>
+            <h3 class="card-title text-lg font-medium">Total Usuarios</h3>
+            <div class="card-value text-3xl font-bold my-2">{{ totalUsers }}</div>
+            <div class="card-detail text-sm text-gray-600">
+              <div>
+                <span class="client font-medium text-blue-600">{{ usersByRole['CLIENTE'] || 0 }}</span>
+                <span> clientes</span>
+              </div>
+              <div>
+                <span class="owner font-medium text-amber-600">{{ usersByRole['PROPIETARIO'] || 0 }}</span>
+                <span> propietarios</span>
+              </div>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Tarjeta de Ciudades -->
+      <div class="w-full">
+        <p-card class="stat-card h-full">
+          <div class="card-content flex flex-col items-center text-center">
+            <i class="pi pi-map-marker card-icon text-4xl text-red-500 mb-2"></i>
+            <h3 class="card-title text-lg font-medium">Ciudades</h3>
+            <div class="card-value text-3xl font-bold my-2">{{ Object.keys(roomsByCity).length }}</div>
+            <div class="card-detail text-sm text-gray-600">
+              <span>Con habitaciones disponibles</span>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="w-full">
+        <p-card class="chart-card h-full  pb-3" header="Top ciudades con más habitaciones">
+          <div class="chart-container h-64">
+            <p-chart type="pie" [data]="cityChartData" [options]="cityChartOptions" *ngIf="!loadingCharts"></p-chart>
+          </div>
+        </p-card>
+      </div>
+      <div class="w-full">
+        <p-card class="chart-card h-full pb-3" header="Distribución de usuarios por rol">
+          <div class="chart-container h-64">
+            <p-chart type="doughnut" [data]="userRoleChartData" [options]="userRoleChartOptions" *ngIf="!loadingCharts"></p-chart>
+          </div>
+        </p-card>
+      </div>
+      <div class="w-full md:col-span-2 lg:col-span-1">
+        <p-card class="chart-card h-full  pb-3" header="Distribución por rango de precios">
+          <div class="chart-container h-64">
+            <p-chart type="bar" [data]="priceChartData" [options]="priceChartOptions" *ngIf="!loadingCharts"></p-chart>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="w-full" *ngFor="let _ of [1,2,3,4]">
+        <p-card class="skeleton-card">
+          <div class="skeleton-content flex flex-col items-center">
+            <p-skeleton shape="circle" size="4rem" class="mb-3"></p-skeleton>
+            <p-skeleton width="10rem" height="2rem" class="mb-2"></p-skeleton>
+            <p-skeleton width="5rem" height="3rem" class="mb-2"></p-skeleton>
+            <p-skeleton width="8rem" height="1.5rem"></p-skeleton>
+          </div>
+        </p-card>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="w-full" *ngFor="let _ of [1,2]">
+        <p-card class="skeleton-chart">
+          <ng-template pTemplate="header">
+            <p-skeleton width="15rem" height="1.5rem"></p-skeleton>
+          </ng-template>
+          <div class="skeleton-chart-container h-64">
+            <p-skeleton width="100%" height="100%"></p-skeleton>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</ng-template>
