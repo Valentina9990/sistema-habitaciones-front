@@ -34,13 +34,12 @@
         </p-card>
       </div>
 
-      <!-- Tarjeta de Ciudades -->
       <div class="w-full">
         <p-card class="stat-card h-full">
           <div class="card-content flex flex-col items-center text-center">
             <i class="pi pi-map-marker card-icon text-4xl text-red-500 mb-2"></i>
             <h3 class="card-title text-lg font-medium">Ciudades</h3>
-            <div class="card-value text-3xl font-bold my-2">{{ Object.keys(roomsByCity).length }}</div>
+            <div class="card-value text-3xl font-bold my-2">{{ totalCities }}</div>
             <div class="card-detail text-sm text-gray-600">
               <span>Con habitaciones disponibles</span>
             </div>

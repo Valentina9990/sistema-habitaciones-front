@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
   rooms: Room[] = [];
   users: User[] = [];
   
-
+  totalCities: number = 0;
   totalRooms: number = 0;
   totalUsers: number = 0;
   verifiedRooms: number = 0;
@@ -120,6 +120,8 @@ export class DashboardComponent implements OnInit {
       acc[room.ciudad] = (acc[room.ciudad] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
+
+    this.totalCities = Object.keys(this.roomsByCity).length;
 
     const sortedCities = (Object.entries(this.roomsByCity) as [string, number][])
       .sort((a, b) => b[1] - a[1])
