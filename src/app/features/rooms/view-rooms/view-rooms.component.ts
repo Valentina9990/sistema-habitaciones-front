@@ -8,7 +8,7 @@ import { Room } from '../../../shared/models/room';
 import { SliderModule } from 'primeng/slider';
 
 import { finalize } from 'rxjs/operators';
-import { RoomService } from '../services/room.service';
+import { RoomService } from '../../../shared/services/room.service';
 import { Service } from '../../../shared/models/service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 

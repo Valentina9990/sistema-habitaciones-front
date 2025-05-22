@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Room } from '../../../../shared/models/room';
-import { RoomService } from '../../../rooms/services/room.service';
+import { RoomService } from '../../../../shared/services/room.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';

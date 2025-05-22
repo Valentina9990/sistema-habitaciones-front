@@ -17,7 +17,7 @@ import { PanelModule } from 'primeng/panel';
 import { DividerModule } from 'primeng/divider';
 import { Room } from '../../../../shared/models/room';
 import { User } from '../../../../shared/models/user';
-import { RoomService } from '../../../rooms/services/room.service';
+import { RoomService } from '../../../../shared/services/room.service';
 import { UserService } from '../../../profile/services/user.service';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';

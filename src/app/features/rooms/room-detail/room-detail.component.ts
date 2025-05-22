@@ -5,9 +5,9 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
 import { SharedModule } from '../../../shared/shared.module';
 import { GalleriaModule } from 'primeng/galleria';
 import { finalize } from 'rxjs/operators';
-import { RoomService } from '../services/room.service';
+import { RoomService } from '../../../shared/services/room.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RoomReviewsComponent } from "../room-reviews/room-reviews.component";
+import { RoomReviewsComponent } from "../../room-reviews/room-reviews.component";
 
 @Component({
   selector: 'app-room-detail',

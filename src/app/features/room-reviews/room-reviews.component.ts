@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RoomService } from '../services/room.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RatingModule } from 'primeng/rating';
 import { finalize } from 'rxjs';
-import { Review } from '../../../shared/models/review';
+import { Review } from '../../shared/models/review';
 import { FormsModule } from '@angular/forms';
+import { RoomReviewService } from '../../shared/services/room-review.service';
 
 @Component({
   selector: 'app-room-reviews',
@@ -21,7 +21,7 @@ export class RoomReviewsComponent implements OnChanges {
   loading = false;
   error = false;
 
-  constructor(private roomService: RoomService) {}
+  constructor(private roomReviewService: RoomReviewService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['roomId'] && this.roomId) {
@@ -33,7 +33,7 @@ export class RoomReviewsComponent implements OnChanges {
     this.loading = true;
     this.error = false;
     
-    this.roomService.getRoomReviews(roomId)
+    this.roomReviewService.getRoomReviews(roomId)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (reviews) => {

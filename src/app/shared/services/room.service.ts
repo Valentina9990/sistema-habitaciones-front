@@ -1,17 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { environment } from '../../../../environments/environments';
-import { Room } from '../../../shared/models/room';
-import { Service } from '../../../shared/models/service';
-import { Review } from '../../../shared/models/review';
+import { environment } from '../../../environments/environments';
+import { Room } from '../models/room';
+import { Service } from '../models/service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
   private readonly API_URL_ROOMS = `${environment.api.rooms}`;
-  private readonly API_URL_Reviews = `${environment.api.reviews}`;
 
   constructor(private http: HttpClient) { }
 
@@ -79,23 +77,8 @@ export class RoomService {
     return this.http.get<Room[]>(url + params.join('&'));
   }
 
-  getServices(): Observable<Service[]> {
-    return this.http.get<Service[]>(this.API_URL_ROOMS);
-  }
-
-  getServicesByType(tipo: 'incluido' | 'adicional'): Observable<Service[]> {
-    return this.http.get<Service[]>(`${this.API_URL_ROOMS}?tipo=${tipo}`);
-  }
-
-  getServiceById(id: number): Observable<Service> {
-    return this.http.get<Service>(`${this.API_URL_ROOMS}/${id}`);
-  }
-
   updateRoom(id: number, room: Partial<Room>): Observable<Room> {
     return this.http.put<Room>(`${this.API_URL_ROOMS}/${id}`, room);
   }
   
-  getRoomReviews(roomId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.API_URL_Reviews}?roomId=${roomId}`);
-  }
 }
