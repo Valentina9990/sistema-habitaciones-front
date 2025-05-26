@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
@@ -13,6 +21,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
+import { ReservationService } from '../../shared/services/reservation.service';
 
 @Component({
   selector: 'app-reservation',
@@ -28,10 +37,10 @@ import { SelectModule } from 'primeng/select';
     RadioButtonModule,
     FormsModule,
     DialogModule,
-    SelectModule
+    SelectModule,
   ],
   templateUrl: './reservation.component.html',
-  styleUrl: './reservation.component.scss'
+  styleUrl: './reservation.component.scss',
 })
 export class ReservationComponent implements OnInit {
   room?: Room;
@@ -53,21 +62,25 @@ export class ReservationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private reservationService: ReservationService
   ) {
     this.reservationForm = this.fb.group({
-  checkIn: ['', Validators.required],
-  checkOut: ['', [Validators.required, this.validateCheckOutDate.bind(this)]],
-  guests: [1, Validators.required],
-  firstName: ['', Validators.required],
-  lastName: ['', Validators.required],
-  email: ['', [Validators.required, Validators.email]],
-  phone: ['', Validators.required],
-  cardNumber: ['', Validators.required],
-  expiryDate: ['', Validators.required],
-  cvv: ['', Validators.required],
-  paymentOption: ['full', Validators.required]
-});
+      checkIn: ['', Validators.required],
+      checkOut: [
+        '',
+        [Validators.required, this.validateCheckOutDate.bind(this)],
+      ],
+      guests: [1, Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
+      cardNumber: ['', Validators.required],
+      expiryDate: ['', Validators.required],
+      cvv: ['', Validators.required],
+      paymentOption: ['full', Validators.required],
+    });
   }
 
   ngOnInit(): void {
@@ -83,9 +96,10 @@ export class ReservationComponent implements OnInit {
   loadRoomDetails(roomId: number): void {
     this.loading = true;
     this.error = false;
-    
-    this.roomService.getRoomById(roomId)
-      .pipe(finalize(() => this.loading = false))
+
+    this.roomService
+      .getRoomById(roomId)
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (room) => {
           this.room = room;
@@ -94,7 +108,7 @@ export class ReservationComponent implements OnInit {
         error: (err) => {
           console.error('Error loading room details:', err);
           this.error = true;
-        }
+        },
       });
   }
 
@@ -104,7 +118,7 @@ export class ReservationComponent implements OnInit {
       for (let i = 1; i <= this.room.capacidad; i++) {
         this.guestOptions.push({
           label: i === 1 ? '1 huésped' : `${i} huéspedes`,
-          value: i
+          value: i,
         });
       }
     }
@@ -121,14 +135,16 @@ export class ReservationComponent implements OnInit {
     });
   }
 
-  private validateCheckOutDate(control: AbstractControl): ValidationErrors | null {
+  private validateCheckOutDate(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const checkIn = this.reservationForm?.get('checkIn')?.value;
     const checkOut = control.value;
-    
+
     if (checkIn && checkOut) {
       const minCheckOut = new Date(checkIn);
       minCheckOut.setDate(minCheckOut.getDate());
-      
+
       if (new Date(checkOut) < minCheckOut) {
         return { invalidDate: true };
       }
@@ -136,19 +152,18 @@ export class ReservationComponent implements OnInit {
     return null;
   }
 
-  
   private updateDisabledDates(): void {
     if (this.checkInDate) {
       const disabledDates = [];
       const minCheckOut = new Date(this.checkInDate);
       minCheckOut.setDate(minCheckOut.getDate());
-      
+
       const tempDate = new Date(this.minDate);
       while (tempDate < minCheckOut) {
         disabledDates.push(new Date(tempDate));
         tempDate.setDate(tempDate.getDate() + 1);
       }
-      
+
       this.disabledDates = disabledDates;
     } else {
       this.disabledDates = [];
@@ -158,7 +173,7 @@ export class ReservationComponent implements OnInit {
   calculateNights(): number {
     const checkIn = this.reservationForm.get('checkIn')?.value;
     const checkOut = this.reservationForm.get('checkOut')?.value;
-    
+
     if (checkIn && checkOut) {
       const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -170,9 +185,9 @@ export class ReservationComponent implements OnInit {
   calculateTaxes(): number {
     if (!this.room) return 0;
     let subtotal: number;
-    if (this.calculateNights() <= 0){
+    if (this.calculateNights() <= 0) {
       subtotal = this.room.precioNoche * (this.calculateNights() + 1);
-    } else{
+    } else {
       subtotal = this.room.precioNoche * this.calculateNights();
     }
     return subtotal * 0.19;
@@ -181,20 +196,23 @@ export class ReservationComponent implements OnInit {
   calculateTotal(): number {
     if (!this.room) return 0;
     let subtotal: number;
-    if (this.calculateNights() <= 0){
+    if (this.calculateNights() <= 0) {
       subtotal = this.room.precioNoche * (this.calculateNights() + 1);
-    } else{
+    } else {
       subtotal = this.room.precioNoche * this.calculateNights();
     }
     return subtotal + this.calculateTaxes();
   }
 
   getIncludedServices(): string {
-    return this.room?.serviciosIncluidos?.map(s => s.nombre).join(', ') || 'No hay servicios incluidos';
+    return (
+      this.room?.serviciosIncluidos?.map((s) => s.nombre).join(', ') ||
+      'No hay servicios incluidos'
+    );
   }
 
   getAdditionalServices(): string {
-    const services = this.room?.serviciosAdicionales?.map(s => 
+    const services = this.room?.serviciosAdicionales?.map((s) =>
       s.precio ? `${s.nombre} (${s.precio})` : s.nombre
     );
     return services?.join(', ') || 'No hay servicios adicionales';
@@ -212,14 +230,44 @@ export class ReservationComponent implements OnInit {
   }
 
   calculatePaymentAmount(): void {
-  const total = this.calculateTotal();
-  const paymentOption = this.reservationForm.get('paymentOption')?.value;
-  this.paymentAmount = paymentOption === 'full' ? total : total * 0.5;
-}
-
+    const total = this.calculateTotal();
+    const paymentOption = this.reservationForm.get('paymentOption')?.value;
+    this.paymentAmount = paymentOption === 'full' ? total : total * 0.5;
+  }
 
   confirmPayment(): void {
     this.displayConfirmationModal = false;
-    alert(`Pago de COP ${this.paymentAmount.toLocaleString('es-CO')} confirmado. ¡Reserva completada!`);
+    this.submitReservation();
+    alert(
+      `Pago de COP ${this.paymentAmount.toLocaleString(
+        'es-CO'
+      )} confirmado. ¡Reserva completada!`
+    );
+  }
+
+  submitReservation(): void {
+  if (this.reservationForm.valid) {
+    const reservationData = {
+      habitacionId: this.roomId!, 
+      usuarioId: 123,
+      fechaCheckin: this.formatDateForBackend(this.reservationForm.value.checkIn),
+      fechaCheckout: this.formatDateForBackend(this.reservationForm.value.checkOut),
+      total: this.calculateTotal()
+    };
+
+    this.reservationService.createReservation(reservationData).subscribe({
+      next: (response) => {
+        console.log('Reserva creada con éxito', response);
+        this.displaySuccessModal = true;
+      },
+      error: (err) => {
+        console.error('Error al crear la reserva', err);
+      }
+    });
+  }
+}
+
+  private formatDateForBackend(date: Date): string {
+    return date.toISOString();
   }
 }
