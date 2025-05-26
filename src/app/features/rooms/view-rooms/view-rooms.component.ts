@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-import { SharedModule } from '../../../shared/shared.module';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { Room } from '../../../shared/models/room';
 import { SliderModule } from 'primeng/slider';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { Room } from '../../../shared/models/room';
+import { SharedModule } from '../../../shared/shared.module';
 
-import { finalize } from 'rxjs/operators';
-import { RoomService } from '../../../shared/services/room.service';
-import { Service } from '../../../shared/models/service';
+import { NgIf } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { finalize } from 'rxjs/operators';
+import { Service } from '../../../shared/models/service';
+import { RoomService } from '../../../shared/services/room.service';
 
 @Component({
   selector: 'app-view-rooms',
-  imports: [NavbarComponent, SharedModule, AutoCompleteModule, DatePickerModule, InputNumberModule, SliderModule, ProgressSpinnerModule],
+  imports: [NavbarComponent, SharedModule, AutoCompleteModule, DatePickerModule, InputNumberModule, SliderModule, ProgressSpinnerModule, NgIf],
   templateUrl: './view-rooms.component.html',
   styleUrl: './view-rooms.component.scss'
 })
@@ -110,7 +111,9 @@ export class ViewRoomsComponent implements OnInit {
     this.roomService.searchRooms(filters)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: (rooms) => this.filteredRooms = rooms,
+        next: (rooms) => {
+          this.filteredRooms = rooms
+        },
         error: (err) => console.error('Error searching rooms:', err)
       });
   }
