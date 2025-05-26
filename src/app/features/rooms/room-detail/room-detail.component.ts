@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Room } from '../../../shared/models/room';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 import { SharedModule } from '../../../shared/shared.module';
@@ -23,6 +23,7 @@ export class RoomDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private roomService: RoomService
   ) {}
 
@@ -60,5 +61,11 @@ export class RoomDetailComponent implements OnInit {
       s.precio ? `${s.nombre} ($${s.precio})` : s.nombre
     );
     return services?.join(', ') || 'No hay servicios adicionales';
+  }
+
+  goToReservation(): void {
+    if (this.room && this.roomId) {
+      this.router.navigate(['/reservation', this.roomId]);
+    }
   }
 }

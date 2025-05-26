@@ -67,7 +67,12 @@
       
       <div class="flex flex-col md:flex-row justify-between items-center mt-8 pt-4 border-t border-gray-200">
         <p class="text-2xl font-bold mb-4 md:mb-0">COP {{ room.precioNoche | number }} <span class="text-sm font-normal">/noche</span></p>
-        <button pButton label="Confirmar reserva" class="p-button-lg w-full md:w-auto"></button>
+        <button 
+          pButton 
+          label="Confirmar reserva" 
+          class="p-button-lg w-full md:w-auto"
+          (click)="goToReservation()">
+        </button>
       </div>
     </div>
     

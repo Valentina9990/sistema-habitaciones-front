@@ -7,6 +7,7 @@ import { authGuard } from './shared/guards/auth.guard';
 import { RoomDetailComponent } from './features/rooms/room-detail/room-detail.component';
 import { ADMIN_ROUTES } from './features/admin/admin.routes';
 import { RoomVerificationComponent } from './features/room-verification/room-verification.component';
+import { ReservationComponent } from './features/reservation/reservation.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'admin', children: ADMIN_ROUTES },
   { path: 'rooms/verification', component: RoomVerificationComponent},
   { path: 'rooms/:id', component: RoomDetailComponent },
+  { path: 'reservation/:roomId', component: ReservationComponent },
   { path: '', redirectTo: '/rooms', pathMatch: 'full' },
   { path: '**', redirectTo: '/rooms' }
 ];
