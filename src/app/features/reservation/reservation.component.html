@@ -1,290 +1,324 @@
 <div class="container mx-auto px-4 py-8">
-      <div *ngIf="error" class="text-center">
-        <p class="text-red-500 mb-4">Error al cargar los datos de la habitación</p>
-        <button pButton label="Volver a habitaciones" (click)="goBackToRooms()"></button>
-      </div>
+  <div *ngIf="error" class="text-center">
+    <p class="text-red-500 mb-4">Error al cargar los datos de la habitación</p>
+    <button
+      pButton
+      label="Volver a habitaciones"
+      (click)="goBackToRooms()"
+    ></button>
+  </div>
 
-      <div *ngIf="!loading && !error && room" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div
+    *ngIf="!loading && !error && room"
+    class="grid grid-cols-1 lg:grid-cols-2 gap-8"
+  >
+    <div class="space-y-6">
+      <h2 class="text-2xl font-bold text-gray-900">Resumen de la reserva</h2>
 
-        <div class="space-y-6">
-          <h2 class="text-2xl font-bold text-gray-900">Resumen de la reserva</h2>
-          
-          <p-card *ngIf="room" class="shadow-lg">
-            <ng-template pTemplate="header">
-              <img 
-                [src]="room.imagenes[0] || '/assets/default-room.jpg'" 
-                [alt]="room.direccion"
-                class="w-full h-48 object-cover"
-              />
-            </ng-template>
-            
-            <div class="space-y-4">
-              <h3 class="text-xl font-semibold">{{ room.direccion }}</h3>
-              
-              <div class="text-gray-600">
-                <p><i class="pi pi-users mr-2"></i>Capacidad: {{ room.capacidad }} personas</p>
+      <p-card *ngIf="room" class="shadow-lg">
+        <ng-template pTemplate="header">
+          <img
+            [src]="room.imagenes[0] || '/assets/default-room.jpg'"
+            [alt]="room.direccion"
+            class="w-full h-48 object-cover"
+          />
+        </ng-template>
+
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold">{{ room.direccion }}</h3>
+
+          <div class="text-gray-600">
+            <p>
+              <i class="pi pi-users mr-2"></i>Capacidad:
+              {{ room.capacidad }} personas
+            </p>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div>
+            <h4 class="font-semibold mb-2">Servicios incluidos:</h4>
+            <p class="text-gray-600">{{ getIncludedServices() }}</p>
+          </div>
+
+          <div
+            *ngIf="
+              room.serviciosAdicionales && room.serviciosAdicionales.length > 0
+            "
+          >
+            <h4 class="font-semibold mb-2">
+              Servicios adicionales disponibles:
+            </h4>
+            <p class="text-gray-600">{{ getAdditionalServices() }}</p>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div class="bg-fuchsia-50 p-4 rounded-lg">
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-semibold">Precio por noche:</span>
+              <span class="text-2xl font-bold text-fuchsia-800">
+                COP {{ room.precioNoche | number }}
+              </span>
+            </div>
+
+            <div
+              class="mt-4 space-y-2 text-sm text-gray-600"
+              *ngIf="
+                reservationForm.get('checkIn')?.value &&
+                reservationForm.get('checkOut')?.value
+              "
+            >
+              <div class="flex justify-between">
+                <span
+                  >{{ room.precioNoche | number }} x
+                  {{ calculateNights() }} noches</span
+                >
+                <span
+                  >COP {{ room.precioNoche * calculateNights() | number }}</span
+                >
               </div>
-              
+              <div class="flex justify-between">
+                <span>Impuestos y tasas</span>
+                <span>COP {{ calculateTaxes() | number }}</span>
+              </div>
               <p-divider></p-divider>
-              
-              <div>
-                <h4 class="font-semibold mb-2">Servicios incluidos:</h4>
-                <p class="text-gray-600">{{ getIncludedServices() }}</p>
-              </div>
-              
-              <div *ngIf="room.serviciosAdicionales && room.serviciosAdicionales.length > 0">
-                <h4 class="font-semibold mb-2">Servicios adicionales disponibles:</h4>
-                <p class="text-gray-600">{{ getAdditionalServices() }}</p>
-              </div>
-              
-              <p-divider></p-divider>
-              
-              <div class="bg-fuchsia-50 p-4 rounded-lg">
-                <div class="flex justify-between items-center">
-                  <span class="text-lg font-semibold">Precio por noche:</span>
-                  <span class="text-2xl font-bold text-fuchsia-800">
-                    COP {{ room.precioNoche | number }}
-                  </span>
-                </div>
-                
-                <div class="mt-4 space-y-2 text-sm text-gray-600" *ngIf="reservationForm.get('checkIn')?.value && reservationForm.get('checkOut')?.value">
-                  <div class="flex justify-between">
-                    <span>{{ room.precioNoche | number }} x {{ calculateNights() }} noches</span>
-                    <span>COP {{ (room.precioNoche * calculateNights()) | number }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span>Impuestos y tasas</span>
-                    <span>COP {{ calculateTaxes() | number }}</span>
-                  </div>
-                  <p-divider></p-divider>
-                  <div class="flex justify-between font-bold text-lg">
-                    <span>Total</span>
-                    <span>COP {{ calculateTotal() | number }}</span>
-                  </div>
-                </div>
+              <div class="flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>COP {{ calculateTotal() | number }}</span>
               </div>
             </div>
-          </p-card>
+          </div>
         </div>
-        
-        <div class="space-y-6">
-          <h2 class="text-2xl pl-4 font-bold text-gray-900">Datos de pago</h2>
-          
-          <p-card class="shadow-lg">
-            <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Fecha de entrada
-                  </label>
-                  <p-datepicker 
-                    [(ngModel)]="checkInDate"
-                    formControlName="checkIn"
-                    dateFormat="dd/mm/yy" 
-                    [minDate]="minDate" 
-                    [readonlyInput]="true"
-                    styleClass="w-full"
-                    [showIcon]="true">
-                  </p-datepicker>
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Fecha de salida
-                  </label>
-                  <p-datepicker 
-                    [(ngModel)]="checkOutDate"
-                    formControlName="checkOut"
-                    dateFormat="dd/mm/yy" 
-                    [minDate]="minDate" 
-                    [disabledDates]="disabledDates"
-                    [readonlyInput]="true"
-                    styleClass="w-full"
-                    [showIcon]="true"
-                    [disabled]="!checkInDate">
-                  </p-datepicker>
-                </div>
-              </div>
-              
-              <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Número de huéspedes
-                </label>
-                <p-dropdown 
-                  formControlName="guests"
-                  [options]="guestOptions"
-                  placeholder="Seleccionar huéspedes"
-                  styleClass="w-full">
-                </p-dropdown>
-              </div>
-              
-              <p-divider></p-divider>
-              
-              <h3 class="text-lg font-semibold mb-4">Información del huésped principal</h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Nombre
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="firstName"
-                    placeholder="Nombre"
-                    class="w-full"
-                  />
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Apellido
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="lastName"
-                    placeholder="Apellido"
-                    class="w-full"
-                  />
-                </div>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="email"
-                    type="email"
-                    placeholder="correo@ejemplo.com"
-                    class="w-full"
-                  />
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Teléfono
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="phone"
-                    placeholder="Número de teléfono"
-                    class="w-full"
-                  />
-                </div>
-              </div>
-              
-              <p-divider></p-divider>
-              
-              <h3 class="text-lg font-semibold mb-4">Información de pago</h3>
-              
-              <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Número de tarjeta
-                </label>
-                <input 
-                  pInputText 
-                  formControlName="cardNumber"
-                  placeholder="1234 5678 9012 3456"
-                  class="w-full"
-                />
-              </div>
-              
-              <div class="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Fecha de vencimiento
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="expiryDate"
-                    placeholder="MM/AA"
-                    class="w-full"
-                  />
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    CVV
-                  </label>
-                  <input 
-                    pInputText 
-                    formControlName="cvv"
-                    placeholder="123"
-                    class="w-full"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Opción de pago</label>
-                <div class="flex gap-4">
-                  <div class="flex items-center">
-                    <p-radioButton 
-                      name="paymentOption" 
-                      value="full" 
-                      [(ngModel)]="paymentOption"
-                      inputId="fullPayment"
-                      (onClick)="calculatePaymentAmount()">
-                    </p-radioButton>
-                    <label for="fullPayment" class="ml-2">Pago completo (100%)</label>
-                  </div>
-                  <div class="flex items-center">
-                    <p-radioButton 
-                      name="paymentOption" 
-                      value="half" 
-                      [(ngModel)]="paymentOption"
-                      inputId="halfPayment"
-                      styleClass="bb-fuchsia-600"
-                      (onClick)="calculatePaymentAmount()">
-                    </p-radioButton>
-                    <label for="halfPayment" class="ml-2">Pago inicial (50%)</label>
-                  </div>
-                </div>
-              </div>
-              
-              <button 
-                pButton 
-                type="submit"
-                label="Confirmar reserva"
-                class="w-full p-button-lg bb-fuchsia-600 text-white"
-                [disabled]="reservationForm.invalid">
-              </button>
-              
-            </form>
-          </p-card>
-        </div>
-        
-      </div>
-      
+      </p-card>
     </div>
 
-    <p-dialog 
-  header="Confirmar pago" 
-  [(visible)]="displayConfirmationModal" 
-  [style]="{width: '450px'}"
-  [modal]="true">
-  
-  <div class="text-center">
-    <p>¿Desea proceder con el pago de <strong>COP {{ paymentAmount | number }}</strong>?</p>
-    <p class="text-sm text-gray-600 mt-2">({{ paymentOption === 'full' ? 'Pago completo' : '50% de anticipo' }})</p>
+    <div class="space-y-6">
+      <h2 class="text-2xl pl-4 font-bold text-gray-900">Datos de pago</h2>
+
+      <p-card class="shadow-lg">
+        <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Fecha de entrada
+              </label>
+              <p-datepicker
+                [(ngModel)]="checkInDate"
+                formControlName="checkIn"
+                dateFormat="dd/mm/yy"
+                [minDate]="minDate"
+                [readonlyInput]="true"
+                styleClass="w-full"
+                [showIcon]="true"
+              >
+              </p-datepicker>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Fecha de salida
+              </label>
+              <p-datepicker
+                [(ngModel)]="checkOutDate"
+                formControlName="checkOut"
+                dateFormat="dd/mm/yy"
+                [minDate]="minDate"
+                [disabledDates]="disabledDates"
+                [readonlyInput]="true"
+                styleClass="w-full"
+                [showIcon]="true"
+                [disabled]="!checkInDate"
+              >
+              </p-datepicker>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Número de huéspedes
+            </label>
+            <p-select
+              formControlName="guests"
+              [options]="guestOptions"
+              placeholder="Seleccionar huéspedes"
+              styleClass="w-full"
+            >
+            </p-select>
+          </div>
+
+          <p-divider></p-divider>
+
+          <h3 class="text-lg font-semibold mb-4">
+            Información del huésped principal
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Nombre
+              </label>
+              <input
+                pInputText
+                formControlName="firstName"
+                placeholder="Nombre"
+                class="w-full"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Apellido
+              </label>
+              <input
+                pInputText
+                formControlName="lastName"
+                placeholder="Apellido"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                pInputText
+                formControlName="email"
+                type="email"
+                placeholder="correo@ejemplo.com"
+                class="w-full"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Teléfono
+              </label>
+              <input
+                pInputText
+                formControlName="phone"
+                placeholder="Número de teléfono"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          <h3 class="text-lg font-semibold mb-4">Información de pago</h3>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Número de tarjeta
+            </label>
+            <input
+              pInputText
+              formControlName="cardNumber"
+              placeholder="1234 5678 9012 3456"
+              class="w-full"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Fecha de vencimiento
+              </label>
+              <input
+                pInputText
+                formControlName="expiryDate"
+                placeholder="MM/AA"
+                class="w-full"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                CVV
+              </label>
+              <input
+                pInputText
+                formControlName="cvv"
+                placeholder="123"
+                class="w-full"
+              />
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Opción de pago</label
+            >
+            <div class="flex gap-4">
+              <div class="flex items-center">
+                <p-radioButton
+                  name="paymentOption"
+                  value="full"
+                  formControlName="paymentOption"
+                  inputId="fullPayment"
+                >
+                </p-radioButton>
+                <label for="fullPayment" class="ml-2"
+                  >Pago completo (100%)</label
+                >
+              </div>
+              <div class="flex items-center">
+                <p-radioButton
+                  name="paymentOption"
+                  value="half"
+                  formControlName="paymentOption"
+                  inputId="halfPayment"
+                >
+                </p-radioButton>
+                <label for="halfPayment" class="ml-2">Pago inicial (50%)</label>
+              </div>
+            </div>
+          </div>
+
+          <button
+            pButton
+            type="submit"
+            label="Confirmar reserva"
+            class="w-full p-button-lg bb-fuchsia-600 text-white"
+            [disabled]="reservationForm.invalid"
+          ></button>
+        </form>
+      </p-card>
+    </div>
   </div>
-  
+</div>
+
+<p-dialog
+  header="Confirmar pago"
+  [(visible)]="displayConfirmationModal"
+  [style]="{ width: '450px' }"
+  [modal]="true"
+>
+  <div class="text-center">
+    <p>
+      ¿Desea proceder con el pago de
+      <strong>COP {{ paymentAmount | number }}</strong
+      >?
+    </p>
+  </div>
+
   <ng-template pTemplate="footer">
-    <button 
-      pButton 
-      label="Cancelar" 
-      icon="pi pi-times" 
-      (click)="displayConfirmationModal=false" 
-      class="p-button-text">
-    </button>
-    <button 
-      pButton 
-      label="Confirmar pago" 
-      icon="pi pi-check" 
-      (click)="confirmPayment()" 
-      class="bb-fuchsia-600 text-white">
-    </button>
+    <button
+      pButton
+      label="Cancelar"
+      icon="pi pi-times"
+      (click)="displayConfirmationModal = false"
+      class="p-button-text"
+    ></button>
+    <button
+      pButton
+      label="Confirmar pago"
+      icon="pi pi-check"
+      (click)="confirmPayment()"
+      class="bb-fuchsia-600 text-white"
+    ></button>
   </ng-template>
 </p-dialog>

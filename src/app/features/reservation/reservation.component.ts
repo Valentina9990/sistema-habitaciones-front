@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { Room } from '../../shared/models/room';
@@ -13,6 +12,7 @@ import { RoomService } from '../../shared/services/room.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-reservation',
@@ -23,12 +23,12 @@ import { DialogModule } from 'primeng/dialog';
     ButtonModule,
     InputTextModule,
     DatePickerModule,
-    DropdownModule,
     CardModule,
     DividerModule,
     RadioButtonModule,
     FormsModule,
-    DialogModule
+    DialogModule,
+    SelectModule
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss'
@@ -44,7 +44,7 @@ export class ReservationComponent implements OnInit {
   checkOutDate: Date | null = null;
   minDate: Date = new Date();
   disabledDates: Date[] = [];
-  paymentOption: 'full' | 'half' = 'full';
+  paymentOption: string = 'full';
   displayConfirmationModal: boolean = false;
   paymentAmount: number = 0;
   displaySuccessModal: boolean = false;
@@ -56,17 +56,18 @@ export class ReservationComponent implements OnInit {
     private roomService: RoomService
   ) {
     this.reservationForm = this.fb.group({
-      checkIn: ['', Validators.required],
-    checkOut: ['', [Validators.required, this.validateCheckOutDate.bind(this)]],
-      guests: [1, Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      cardNumber: ['', Validators.required],
-      expiryDate: ['', Validators.required],
-      cvv: ['', Validators.required]
-    });
+  checkIn: ['', Validators.required],
+  checkOut: ['', [Validators.required, this.validateCheckOutDate.bind(this)]],
+  guests: [1, Validators.required],
+  firstName: ['', Validators.required],
+  lastName: ['', Validators.required],
+  email: ['', [Validators.required, Validators.email]],
+  phone: ['', Validators.required],
+  cardNumber: ['', Validators.required],
+  expiryDate: ['', Validators.required],
+  cvv: ['', Validators.required],
+  paymentOption: ['full', Validators.required]
+});
   }
 
   ngOnInit(): void {
@@ -126,7 +127,7 @@ export class ReservationComponent implements OnInit {
     
     if (checkIn && checkOut) {
       const minCheckOut = new Date(checkIn);
-      minCheckOut.setDate(minCheckOut.getDate() + 1);
+      minCheckOut.setDate(minCheckOut.getDate());
       
       if (new Date(checkOut) < minCheckOut) {
         return { invalidDate: true };
@@ -168,13 +169,23 @@ export class ReservationComponent implements OnInit {
 
   calculateTaxes(): number {
     if (!this.room) return 0;
-    const subtotal = this.room.precioNoche * this.calculateNights();
+    let subtotal: number;
+    if (this.calculateNights() <= 0){
+      subtotal = this.room.precioNoche * (this.calculateNights() + 1);
+    } else{
+      subtotal = this.room.precioNoche * this.calculateNights();
+    }
     return subtotal * 0.19;
   }
 
   calculateTotal(): number {
     if (!this.room) return 0;
-    const subtotal = this.room.precioNoche * this.calculateNights();
+    let subtotal: number;
+    if (this.calculateNights() <= 0){
+      subtotal = this.room.precioNoche * (this.calculateNights() + 1);
+    } else{
+      subtotal = this.room.precioNoche * this.calculateNights();
+    }
     return subtotal + this.calculateTaxes();
   }
 
@@ -201,9 +212,10 @@ export class ReservationComponent implements OnInit {
   }
 
   calculatePaymentAmount(): void {
-    const total = this.calculateTotal();
-    this.paymentAmount = this.paymentOption === 'full' ? total : total * 0.5;
-  }
+  const total = this.calculateTotal();
+  const paymentOption = this.reservationForm.get('paymentOption')?.value;
+  this.paymentAmount = paymentOption === 'full' ? total : total * 0.5;
+}
 
 
   confirmPayment(): void {
