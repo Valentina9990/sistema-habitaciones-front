@@ -22,6 +22,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { ReservationService } from '../../shared/services/reservation.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-reservation',
@@ -63,7 +64,8 @@ export class ReservationComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private roomService: RoomService,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private authService: AuthService
   ) {
     this.reservationForm = this.fb.group({
       checkIn: ['', Validators.required],
@@ -246,26 +248,33 @@ export class ReservationComponent implements OnInit {
   }
 
   submitReservation(): void {
-  if (this.reservationForm.valid) {
-    const reservationData = {
-      habitacionId: this.roomId!, 
-      usuarioId: 123,
-      fechaCheckin: this.formatDateForBackend(this.reservationForm.value.checkIn),
-      fechaCheckout: this.formatDateForBackend(this.reservationForm.value.checkOut),
-      total: this.calculateTotal()
-    };
-
-    this.reservationService.createReservation(reservationData).subscribe({
-      next: (response) => {
-        console.log('Reserva creada con éxito', response);
-        this.displaySuccessModal = true;
-      },
-      error: (err) => {
-        console.error('Error al crear la reserva', err);
+    if (this.reservationForm.valid) {
+      const currentUser = this.authService.getCurrentUser();
+      
+      if (!currentUser) {
+        console.error('No authenticated user');
+        return;
       }
-    });
+
+      const reservationData = {
+        habitacionId: this.roomId!,
+        usuarioId: currentUser.id,
+        fechaCheckin: this.formatDateForBackend(this.reservationForm.value.checkIn),
+        fechaCheckout: this.formatDateForBackend(this.reservationForm.value.checkOut),
+        total: this.calculateTotal()
+      };
+
+      this.reservationService.createReservation(reservationData).subscribe({
+        next: (response) => {
+          console.log('Reserva creada con éxito', response);
+          this.displaySuccessModal = true;
+        },
+        error: (err) => {
+          console.error('Error al crear la reserva', err);
+        }
+      });
+    }
   }
-}
 
   private formatDateForBackend(date: Date): string {
     return date.toISOString();

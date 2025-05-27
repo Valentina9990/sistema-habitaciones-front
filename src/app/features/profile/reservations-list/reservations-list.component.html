@@ -1,0 +1,53 @@
+<!-- reservations-list.component.html -->
+<div class="container mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold mb-6">Mis Reservas</h2>
+
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading && reservations.length === 0" class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg">
+    No tienes reservas registradas.
+  </div>
+
+  <div *ngFor="let reservation of reservations" class="bg-white shadow rounded-lg mb-6 overflow-hidden">
+    <div class="p-6">
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="text-xl font-semibold mb-2">Habitación #{{ reservation.habitacionId }}</h3>
+          <div class="flex flex-wrap gap-4 mb-3">
+            <div>
+              <span class="text-gray-500 block text-sm">Check-in</span>
+              <span class="font-medium">{{ formatDate(reservation.fechaCheckin) }}</span>
+            </div>
+            <div>
+              <span class="text-gray-500 block text-sm">Check-out</span>
+              <span class="font-medium">{{ formatDate(reservation.fechaCheckout) }}</span>
+            </div>
+            <div>
+              <span class="text-gray-500 block text-sm">Total</span>
+              <span class="font-medium">{{ reservation.total | currency }}</span>
+            </div>
+          </div>
+          <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" 
+                [ngClass]="{
+                  'bg-yellow-100 text-yellow-800': reservation.estado === 'pendiente',
+                  'bg-green-100 text-green-800': reservation.estado === 'confirmada',
+                  'bg-red-100 text-red-800': reservation.estado === 'cancelada'
+                }">
+            {{ reservation.estado | titlecase }}
+          </span>
+        </div>
+
+        <button *ngIf="reservation.estado === 'pendiente'" 
+                (click)="confirmCancel(reservation.id)"
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+          Cancelar Reserva
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

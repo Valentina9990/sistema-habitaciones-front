@@ -8,6 +8,7 @@ import { RoomDetailComponent } from './features/rooms/room-detail/room-detail.co
 import { ADMIN_ROUTES } from './features/admin/admin.routes';
 import { RoomVerificationComponent } from './features/room-verification/room-verification.component';
 import { ReservationComponent } from './features/reservation/reservation.component';
+import { ReservationsListComponent } from './features/profile/reservations-list/reservations-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,10 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   { path: 'rooms', component: ViewRoomsComponent },
   { path: 'admin', children: ADMIN_ROUTES },
+  {
+    path: 'profile/reservations',
+    component: ReservationsListComponent
+  },
   { path: 'rooms/verification', component: RoomVerificationComponent},
   { path: 'rooms/:id', component: RoomDetailComponent },
   { path: 'reservation/:roomId', component: ReservationComponent },
