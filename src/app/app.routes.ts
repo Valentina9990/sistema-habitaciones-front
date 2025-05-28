@@ -37,6 +37,6 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/rooms', pathMatch: 'full' },
-  { path: '**', redirectTo: '/rooms' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
