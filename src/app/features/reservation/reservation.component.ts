@@ -23,6 +23,8 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { ReservationService } from '../../shared/services/reservation.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-reservation',
@@ -39,7 +41,9 @@ import { AuthService } from '../../shared/services/auth.service';
     FormsModule,
     DialogModule,
     SelectModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
@@ -58,6 +62,7 @@ export class ReservationComponent implements OnInit {
   displayConfirmationModal: boolean = false;
   paymentAmount: number = 0;
   displaySuccessModal: boolean = false;
+  successMessage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -65,7 +70,8 @@ export class ReservationComponent implements OnInit {
     private fb: FormBuilder,
     private roomService: RoomService,
     private reservationService: ReservationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private messageService: MessageService
   ) {
     this.reservationForm = this.fb.group({
       checkIn: ['', Validators.required],
@@ -238,43 +244,52 @@ export class ReservationComponent implements OnInit {
   }
 
   confirmPayment(): void {
-    this.displayConfirmationModal = false;
-    this.submitReservation();
-    alert(
-      `Pago de COP ${this.paymentAmount.toLocaleString(
-        'es-CO'
-      )} confirmado. ¡Reserva completada!`
-    );
-  }
+  this.displayConfirmationModal = false;
+  this.submitReservation();
+  this.messageService.add({
+    severity: 'success',
+    summary: '¡Éxito!',
+    detail: `Pago de COP ${this.paymentAmount.toLocaleString('es-CO')} confirmado. ¡Reserva completada!`,
+    life: 5000
+  });
+}
 
-  submitReservation(): void {
-    if (this.reservationForm.valid) {
-      const currentUser = this.authService.getCurrentUser();
-      
-      if (!currentUser) {
-        console.error('No authenticated user');
-        return;
-      }
-
-      const reservationData = {
-        habitacionId: this.roomId!,
-        usuarioId: currentUser.id,
-        fechaCheckin: this.formatDateForBackend(this.reservationForm.value.checkIn),
-        fechaCheckout: this.formatDateForBackend(this.reservationForm.value.checkOut),
-        total: this.calculateTotal()
-      };
-
-      this.reservationService.createReservation(reservationData).subscribe({
-        next: (response) => {
-          console.log('Reserva creada con éxito', response);
-          this.displaySuccessModal = true;
-        },
-        error: (err) => {
-          console.error('Error al crear la reserva', err);
-        }
-      });
+submitReservation(): void {
+  if (this.reservationForm.valid) {
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (!currentUser) {
+      console.error('No authenticated user');
+      return;
     }
-  }
+
+    const reservationData = {
+      habitacionId: this.roomId!,
+      usuarioId: currentUser.id,
+      fechaCheckin: this.formatDateForBackend(this.reservationForm.value.checkIn),
+      fechaCheckout: this.formatDateForBackend(this.reservationForm.value.checkOut),
+      total: this.calculateTotal()
+    };
+
+    this.reservationService.createReservation(reservationData).subscribe({
+      next: (response) => {
+        console.log('Reserva creada con éxito', response);
+        this.displaySuccessModal = true;
+        setTimeout(() => {
+          this.router.navigate(['/profile/reservations']);
+        }, 2000);
+      },
+      error: (err) => {
+        console.error('Error al crear la reserva', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Ocurrió un error al crear la reserva',
+          life: 5000
+        });
+      }
+    });
+  }}
 
   private formatDateForBackend(date: Date): string {
     return date.toISOString();

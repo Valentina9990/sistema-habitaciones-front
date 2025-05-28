@@ -29,6 +29,15 @@ export class NavbarComponent {
       label: 'Cerrar sesión',
       icon: 'pi pi-sign-out',
       command: () => this.logout()
+    },
+    {
+      label: 'Mis reservas',
+      icon: 'pi pi-calendar',
+      command: () => {
+        this.router.navigate(['/profile/reservations']).catch(e => {
+          console.error('Navigation error:', e);
+        });
+      }
     }
   ];
   

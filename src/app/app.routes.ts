@@ -21,9 +21,16 @@ export const routes: Routes = [
     path: 'rooms', 
     component: ViewRoomsComponent,
   },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   { 
     path: 'reservation/:roomId', 
     component: ReservationComponent,
+  },
+  {
+    path: 'profile/reservations',
+    component: ReservationsListComponent,
+    canActivate: [authGuard],
+    data: { role: 'CLIENTE'}
   },
   { 
     path: 'rooms/:id', 

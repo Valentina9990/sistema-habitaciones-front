@@ -5,13 +5,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-reservations-list',
   templateUrl: './reservations-list.component.html',
   styleUrls: ['./reservations-list.component.scss'],
   providers: [ConfirmationService, MessageService],
-  imports: [CommonModule, SharedModule, ConfirmDialogModule],
+  imports: [CommonModule, SharedModule, ConfirmDialogModule, NavbarComponent],
   standalone: true
 })
 export class ReservationsListComponent implements OnInit {
