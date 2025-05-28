@@ -1,8 +1,8 @@
 export interface Review {
   id: string;
-  clientId: string;
-  roomId: string;
-  comment: string;
-  rating: number;
+  usuarioId: string;
+  habitacionId: string;
   fecha: Date;
+  calificacion: number;
+  comentario: string;
 }

@@ -13,6 +13,6 @@ export class RoomReviewService {
   constructor(private http: HttpClient) { }
 
   getRoomReviews(roomId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.API_URL_Reviews}?roomId=${roomId}`);
+    return this.http.get<Review[]>(`${this.API_URL_Reviews}?habitacionId=${roomId}`);
   }
 }
