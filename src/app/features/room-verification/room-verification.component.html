@@ -1,33 +1,5 @@
 <app-navbar></app-navbar>
 <div class="room-verification-container p-6">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold mb-4">Verificación de Habitaciones</h1>
-    
-    <div class="border-b border-gray-200">
-      <nav class="-mb-px flex space-x-8">
-        <button 
-          (click)="onTabChange('unverified')"
-          [class]="activeTab === 'unverified' ? 
-            'border-blue-500 text-sky-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm' : 
-            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm'"
-        >
-          Habitaciones sin Verificar
-          <span *ngIf="unverifiedRooms.length > 0" class="ml-2 bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-            {{ unverifiedRooms.length }}
-          </span>
-        </button>
-        <button 
-          (click)="onTabChange('history')"
-          [class]="activeTab === 'history' ? 
-            'border-sky-500 text-sky-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm' : 
-            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm'"
-        >
-          Historial de Verificaciones
-        </button>
-      </nav>
-    </div>
-  </div>
-
   <div class="tab-content">
     <div *ngIf="activeTab === 'unverified'">
       <div *ngIf="loading" class="flex justify-center items-center py-8">
