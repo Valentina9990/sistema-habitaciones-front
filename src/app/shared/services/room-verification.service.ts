@@ -14,7 +14,7 @@ export class RoomVerificationService {
   constructor(private http: HttpClient) { }
 
   getUnverifiedRooms(): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.API_URL_ROOMS}/search?verificada=true`);
+    return this.http.get<Room[]>(`${this.API_URL_ROOMS}/search?verificada=false`);
   }
 
   getVerificationHistory(): Observable<VerificationHistoryItem[]> {

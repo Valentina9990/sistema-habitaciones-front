@@ -142,4 +142,10 @@
       </div>
     </div>
   </div>
+  <app-room-review-modal
+    *ngIf="selectedRoom"
+    [(visible)]="showReviewModal"
+    [roomId]="selectedRoom.id"
+    (reviewSubmitted)="onReviewSubmit($event)"
+  ></app-room-review-modal>
 </div>

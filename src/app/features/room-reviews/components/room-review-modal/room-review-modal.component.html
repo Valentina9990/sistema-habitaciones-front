@@ -1,0 +1,71 @@
+<p-dialog
+  [(visible)]="visible"
+  (onHide)="onHide()"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  header="Agregar Revisión"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-4">
+    <div class="form-group">
+      <label for="rating" class="block text-sm font-medium text-gray-700 mb-1"
+        >Calificación</label
+      >
+      <p-rating
+        formControlName="rating"
+        [stars]="5"
+        class="text-2xl"
+      ></p-rating>
+      <small
+        *ngIf="
+          reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched
+        "
+        class="p-error block mt-1"
+      >
+        Por favor selecciona una calificación entre 1 y 5 estrellas
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="comment" class="block text-sm font-medium text-gray-700 mb-1"
+        >Comentario</label
+      >
+      <textarea
+        pInputTextarea
+        formControlName="comment"
+        rows="5"
+        class="w-full focus:outline-none focus:ring-0 focus:border-gray-300"
+        placeholder="Escribe tu experiencia con esta habitación..."
+      ></textarea>
+      <small
+        *ngIf="
+          reviewForm.get('comment')?.invalid &&
+          reviewForm.get('comment')?.touched
+        "
+        class="p-error block mt-1"
+      >
+        El comentario es requerido y no debe exceder los 500 caracteres
+      </small>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-6">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-outlined p-button-secondary"
+        (click)="onHide()"
+      ></button>
+      <button
+        pButton
+        type="submit"
+        class="p-button-primary"
+        [disabled]="reviewForm.invalid"
+      >
+        <span>Enviar Revisión</span>
+      </button>
+    </div>
+  </form>
+</p-dialog>
