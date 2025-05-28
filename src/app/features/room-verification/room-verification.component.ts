@@ -30,7 +30,6 @@ export class RoomVerificationComponent implements OnInit {
 
   loadInitialData(): void {
     this.loadUnverifiedRooms();
-    this.loadVerificationHistory();
   }
 
   loadUnverifiedRooms(): void {
@@ -43,17 +42,6 @@ export class RoomVerificationComponent implements OnInit {
       error: (error) => {
         console.error('Error loading unverified rooms:', error);
         this.loading = false;
-      }
-    });
-  }
-
-  loadVerificationHistory(): void {
-    this.roomVerificationService.getVerificationHistory().subscribe({
-      next: (history) => {
-        this.verificationHistory = history;
-      },
-      error: (error) => {
-        console.error('Error loading verification history:', error);
       }
     });
   }

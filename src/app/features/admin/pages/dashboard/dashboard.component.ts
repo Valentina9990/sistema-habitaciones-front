@@ -295,7 +295,7 @@ export class DashboardComponent implements OnInit {
 
   getUserRoleTag(role: string): { severity: TagSeverity; label: string } {
     switch (role) {
-      case 'ADMIN':
+      case 'ADMINISTRADOR':
         return { severity: 'danger', label: 'Admin' };
       case 'PROPIETARIO':
         return { severity: 'warn', label: 'Propietario' };

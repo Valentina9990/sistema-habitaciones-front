@@ -11,18 +11,32 @@ import { ReservationComponent } from './features/reservation/reservation.compone
 import { ReservationsListComponent } from './features/profile/reservations-list/reservations-list.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
-  { path: 'rooms', component: ViewRoomsComponent },
-  { path: 'admin', children: ADMIN_ROUTES },
-  {
-    path: 'profile/reservations',
-    component: ReservationsListComponent
+  { 
+    path: 'admin', 
+    children: ADMIN_ROUTES,
+    canActivate: [authGuard],
+    data: { role: 'ADMINISTRADOR' } 
   },
-  { path: 'rooms/verification', component: RoomVerificationComponent},
-  { path: 'rooms/:id', component: RoomDetailComponent },
-  { path: 'reservation/:roomId', component: ReservationComponent },
+  { 
+    path: 'rooms', 
+    component: ViewRoomsComponent,
+  },
+  { 
+    path: 'reservation/:roomId', 
+    component: ReservationComponent,
+  },
+  { 
+    path: 'rooms/:id', 
+    component: RoomDetailComponent,
+  },
+  { 
+    path: 'verification', 
+    component: RoomVerificationComponent,
+    canActivate: [authGuard],
+    data: { role: 'VERIFICADOR' }
+  },
+
+  { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/rooms', pathMatch: 'full' },
   { path: '**', redirectTo: '/rooms' }
 ];

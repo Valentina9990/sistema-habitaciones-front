@@ -11,8 +11,9 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  const requiredRole = route.data['role'] as string;
+  const requiredRole = route.data?.['role'] as string;
   if (requiredRole && !authService.hasRole(requiredRole)) {
+    console.warn(`Acceso denegado. Se requiere el rol: ${requiredRole}`);
     router.navigate(['/']);
     return false;
   }

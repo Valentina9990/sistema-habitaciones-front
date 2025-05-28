@@ -79,21 +79,24 @@ export class AuthService {
     return user !== null && user.rol === role;
   }
   
-  redirectBasedOnRole(user: User): void {
-    switch(user.rol) {
-      case 'ADMIN':
-        this.router.navigate(['/admin/dashboard']);
-        break;
-      case 'PROPIETARIO':
-        this.router.navigate(['/propietario/habitaciones']);
-        break;
-      case 'CLIENTE':
-        this.router.navigate(['/rooms']);
-        break;
-      default:
-        this.router.navigate(['/']);
-    }
+redirectBasedOnRole(user: User): void {
+  switch(user.rol) {
+    case 'ADMINISTRADOR':
+      this.router.navigate(['/admin/dashboard']);
+      break;
+    case 'PROPIETARIO':
+      this.router.navigate(['/propietario/habitaciones']);
+      break;
+    case 'CLIENTE':
+      this.router.navigate(['/rooms']);
+      break;
+    case 'VERIFICADOR':
+      this.router.navigate(['/verification']);
+      break;
+    default:
+      this.router.navigate(['/']);
   }
+}
 
   register(registerData: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.API_URL}/register`, registerData)

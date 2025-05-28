@@ -16,13 +16,13 @@ export interface RegisterRequest {
   apellido: string;
   correo: string;
   contrasena: string;
-  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
+  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMINISTRADOR' | 'VERIFICADOR';
 }
 
 export interface RegisterResponse {
   id: number;
   correo: string;
-  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMIN';
+  rol: 'CLIENTE' | 'PROPIETARIO' | 'ADMINISTRADOR' | 'VERIFICADOR';
   nombre: string;
   apellido: string;
 }
