@@ -9,6 +9,7 @@ import { ADMIN_ROUTES } from './features/admin/admin.routes';
 import { RoomVerificationComponent } from './features/room-verification/room-verification.component';
 import { ReservationComponent } from './features/reservation/reservation.component';
 import { ReservationsListComponent } from './features/profile/reservations-list/reservations-list.component';
+import { UploadRoomComponent } from './features/rooms/components/upload-room/upload-room.component';
 
 export const routes: Routes = [
   { 
@@ -22,6 +23,11 @@ export const routes: Routes = [
     component: ViewRoomsComponent,
   },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
+  {
+    path: 'create-room', component: UploadRoomComponent, canActivate: [authGuard],
+    data: { role: 'PROPIETARIO' }
+  },
+  { path: 'register', component: RegisterComponent },
   { 
     path: 'reservation/:roomId', 
     component: ReservationComponent,

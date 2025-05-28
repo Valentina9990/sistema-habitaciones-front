@@ -85,7 +85,7 @@ redirectBasedOnRole(user: User): void {
       this.router.navigate(['/admin/dashboard']);
       break;
     case 'PROPIETARIO':
-      this.router.navigate(['/propietario/habitaciones']);
+      this.router.navigate(['/create-room']);
       break;
     case 'CLIENTE':
       this.router.navigate(['/rooms']);

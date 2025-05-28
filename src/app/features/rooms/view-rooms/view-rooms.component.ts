@@ -84,12 +84,14 @@ export class ViewRoomsComponent implements OnInit {
     });
 
     this.allServices = Array.from(allServices.values());
-    this.services = this.allServices.map(s => ({
-      id: s.id,
-      name: s.nombre,
-      selected: false,
-      tipo: s.tipo
-    }));
+    this.services = this.allServices
+      .filter(s => s.tipo === 'incluido' || s.tipo === 'adicional')
+      .map(s => ({
+        id: s.id,
+        name: s.nombre,
+        selected: false,
+        tipo: s.tipo as 'incluido' | 'adicional'
+      }));
   }
 
   searchRooms() {
