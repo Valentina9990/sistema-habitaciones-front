@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
   api: {
-    users: 'http://localhost:8087/api/auth',
-    rooms: 'http://localhost:8081/api/rooms',
+    users: 'https://users-service-g7c2d8fudgg9h8gx.eastus2-01.azurewebsites.net/api/auth',
+    rooms: 'https://rooms-service-gwggctftebf8cfbn.eastus2-01.azurewebsites.net/api/rooms',
     reviews: 'http://localhost:8080/microResenas/reviews',
-    booking: 'http://localhost:8085/api/reservas',
+    booking: 'https://reservations-service-a5ezabhvdxa5fkfj.eastus2-01.azurewebsites.net/api/reservas',
   },
 };
