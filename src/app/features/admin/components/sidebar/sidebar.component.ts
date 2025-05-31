@@ -29,12 +29,12 @@ export class SidebarComponent {
     {
       label: 'Usuarios',
       icon: 'pi pi-users',
-      routerLink: '/admin/users'
+      routerLink: '/admin/usuarios'
     },
     {
       label: 'Habitaciones',
       icon: 'pi pi-building',
-      routerLink: '/admin/rooms'
+      routerLink: '/admin/habitaciones'
     },
     {
       label: 'Reseñas',
