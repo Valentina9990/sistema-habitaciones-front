@@ -35,16 +35,6 @@ export class SidebarComponent {
       label: 'Habitaciones',
       icon: 'pi pi-building',
       routerLink: '/admin/habitaciones'
-    },
-    {
-      label: 'Reseñas',
-      icon: 'pi pi-star',
-      routerLink: '/admin/reviews'
-    },
-    {
-      label: 'Reservas',
-      icon: 'pi pi-calendar',
-      routerLink: '/admin/bookings'
     }
   ];
 }
